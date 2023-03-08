@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, Head } from '@inertiajs/react';
 
 export default function Welcome(props) {
@@ -32,12 +33,20 @@ export default function Welcome(props) {
                     )}
                 </div>
 
-                <div className='flex p-4 items-start justify-center'>
+                <div className='flex p-4 items-start justify-center mt-12 sm:mt-0'>
                     <div className='text-3xl sm:text-4xl w-1/2 sm:w-auto text-purple-800 mr-2 text-end'>Welcome to</div>
                     <div className='flex flex-col align-end'>
                         <div className='text-4xl sm:text-6xl text-gray-200'>{props.appName}</div>
                         <div className='text-orange-800'>An Inertia demo app</div>
                     </div>
+                </div>
+
+                <div className='fixed bottom-3 w-full px-2 text-center text-sm text-gray-300'>
+                    Made with
+                    <a href='https://inertiajs.com' target='_blank'><span className='font-bold text-sky-600'> Inertia</span></a>:
+                    <a href='https://reactjs.org/' target='_blank'><span className='text-sky-300'> React {React.version}</span></a>,
+                    <a href='https://laravel.com/' target='_blank'><span className='text-sky-300'> Laravel {props.laravelVersion}</span></a> and
+                    <a href='https://php.net/' target='_blank'><span className='text-sky-300'> PHP {props.phpVersion}</span></a>
                 </div>
             </div>
 
