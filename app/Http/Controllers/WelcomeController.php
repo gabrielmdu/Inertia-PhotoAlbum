@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class WelcomeController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         return Inertia::render('Welcome', [
             'laravelVersion' => Application::VERSION,

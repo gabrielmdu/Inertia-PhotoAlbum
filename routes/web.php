@@ -17,13 +17,13 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', [WelcomeController::class, 'index'])
+Route::get('/', WelcomeController::class)
     ->middleware('guest')
-    ->name('welcome.index');
+    ->name('welcome');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard.index');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
