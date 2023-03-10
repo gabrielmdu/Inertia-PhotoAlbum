@@ -51,6 +51,6 @@ class User extends Authenticatable
     {
         return $this->albums()
             ->orderBy('id', 'DESC')
-            ->paginate(10);
+            ->paginate(9);
     }
 }
