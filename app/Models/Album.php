@@ -11,6 +11,12 @@ class Album extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'cover_id',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

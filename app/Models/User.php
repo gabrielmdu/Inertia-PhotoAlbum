@@ -46,4 +46,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Album::class);
     }
+
+    public function getLatestAlbumsPaginated()
+    {
+        return $this->albums()
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+    }
 }
