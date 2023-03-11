@@ -45,4 +45,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+
+        if ($response->getStatusCode() === 403) {
+            return to_route('dashboard');
+        }
+
+        return $response;
+    }
 }
