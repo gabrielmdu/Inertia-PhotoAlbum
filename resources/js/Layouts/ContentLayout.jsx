@@ -2,9 +2,9 @@ import { Head } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "./AuthenticatedLayout";
 
-export default function Content({ auth, header, title, children }) {
+export default function Content({ header, title, children }) {
     return (
-        <AuthenticatedLayout auth={auth} header={header}>
+        <AuthenticatedLayout header={header}>
             <Head title={title} />
 
             <div className="flex flex-1 flex-col justify-center items-center py-3 sm:py-6">
