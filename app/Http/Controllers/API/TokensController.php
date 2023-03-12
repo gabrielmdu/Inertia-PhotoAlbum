@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\Response as HttpResponse;
 use Laravel\Sanctum\NewAccessToken;
 
 class TokensController extends Controller
@@ -12,11 +14,13 @@ class TokensController extends Controller
         $request->authenticate();
 
         /** @var NewAccessToken */
-        $token = $request->user()->createToken('ipa_token', ['*'], now()->addMinutes(config('sanctum.expiration')));
+        $token = $request
+            ->user()
+            ->createToken('ipa_token', ['*'], now()->addMinutes(config('sanctum.expiration')));
 
-        return [
+        return response([
             'token' => $token->plainTextToken,
             'expiration' => $token->accessToken->expires_at->timestamp
-        ];
+        ], HttpResponse::HTTP_CREATED);
     }
 }

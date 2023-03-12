@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\TokensController;
+use App\Http\Controllers\API\AlbumsController;
+use App\Http\Controllers\API\TokensController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::name('api.')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
 
-Route::post('/tokens/create', [TokensController::class, 'create']);
+        Route::get('/albums', [AlbumsController::class, 'index'])->name('albums.index');
+    });
+
+    Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');
+});

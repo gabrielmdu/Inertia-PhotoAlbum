@@ -41,4 +41,12 @@ class AuthorizationTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
+
+    public function test_user_can_access_dashboard_page(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+        $response->assertOk();
+    }
 }
