@@ -1,10 +1,12 @@
 import Album from '@/Components/Album';
 import ContentLayout from '@/Layouts/ContentLayout';
+import Pagination from '@/Components/Pagination';
+import { getLinksFromLaravelPagination } from '@/common';
 
-export default function AlbumsIndex(props) {
+export default function AlbumsIndex({albums, errors}) {
     return (
         <ContentLayout
-            errors={props.errors}
+            errors={errors}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
             title='Albums'
         >
@@ -12,11 +14,13 @@ export default function AlbumsIndex(props) {
 
             <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center'>
                 {
-                    props.albums.data.length === 0
+                    albums.data.length === 0
                         ? <div>There are no albums here :(</div>
-                        : props.albums.data.map(a => <Album key={a.id} album={a} />)
+                        : albums.data.map(a => <Album key={a.id} album={a} />)
                 }
             </div>
+
+            {albums.data.length > 0 && <Pagination links={getLinksFromLaravelPagination(albums.links, albums.meta)} />}
         </ContentLayout >
     );
 }
