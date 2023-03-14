@@ -8,9 +8,10 @@ import {
 } from '@tabler/icons-react';
 
 /** Link to a paginated result set */
-const PageLink = ({ href, isEnabled, isActive, className = '', children }) => {
+const PageLink = ({ href, isEnabled, isActive, preserveScroll, className = '', children }) => {
     return (
         <Link
+            preserveScroll={preserveScroll}
             href={href}
             className={'flex items-center rounded mx-1 py-2 px-3 border border-rose-400 ' +
                 (isEnabled ? ' opacity-50 pointer-events-none ' : '') +
@@ -22,7 +23,7 @@ const PageLink = ({ href, isEnabled, isActive, className = '', children }) => {
     );
 };
 
-export default function Pagination({ maxPages = 5, links, className = '' }) {
+export default function Pagination({ maxPages = 5, links, preserveScroll = false, className = '' }) {
     const {
         prevLink,
         nextLink,
@@ -55,21 +56,21 @@ export default function Pagination({ maxPages = 5, links, className = '' }) {
 
     return (
         <div className={'flex flex-wrap justify-center w-full mt-6 text-rose-500 ' + className}>
-            <PageLink href={route(route().current())} isEnabled={currentPage === 1}><IconChevronsLeft size={16} /></PageLink>
-            <PageLink href={prevLink} isEnabled={currentPage === 1}><IconChevronLeft size={16} /></PageLink>
+            <PageLink href={route(route().current())} isEnabled={currentPage === 1} preserveScroll={preserveScroll}><IconChevronsLeft size={16} /></PageLink>
+            <PageLink href={prevLink} isEnabled={currentPage === 1} preserveScroll={preserveScroll}><IconChevronLeft size={16} /></PageLink>
 
             {getPages().map(page => {
                 const { url, active } = allLinks[page];
 
                 return (
-                    <PageLink key={page} href={url} isActive={active}>
+                    <PageLink key={page} href={url} isActive={active} preserveScroll={preserveScroll}>
                         {page}
                     </PageLink>
                 );
             })}
 
-            <PageLink href={nextLink} isEnabled={currentPage === lastPage}><IconChevronRight size={16} /></PageLink>
-            <PageLink href={lastLink} isEnabled={currentPage === lastPage}><IconChevronsRight size={16} /></PageLink>
+            <PageLink href={nextLink} isEnabled={currentPage === lastPage} preserveScroll={preserveScroll}><IconChevronRight size={16} /></PageLink>
+            <PageLink href={lastLink} isEnabled={currentPage === lastPage} preserveScroll={preserveScroll}><IconChevronsRight size={16} /></PageLink>
         </div>
     );
 };

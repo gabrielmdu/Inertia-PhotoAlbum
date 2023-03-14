@@ -20,7 +20,7 @@ export default function AlbumsIndex({albums, errors}) {
                 }
             </div>
 
-            {albums.data.length > 0 && <Pagination links={getLinksFromLaravelPagination(albums.links, albums.meta)} />}
+            {albums.data.length > 0 && <Pagination links={getLinksFromLaravelPagination(albums.links, albums.meta)} preserveScroll />}
         </ContentLayout >
     );
 }
