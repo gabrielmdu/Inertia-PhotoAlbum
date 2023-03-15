@@ -58,7 +58,7 @@ export default function Pagination({ maxPages = 5, links, preserveScroll = false
     }, [lastPage, currentPage, maxPages]);
 
     return (
-        <div className={'flex flex-wrap justify-center w-full mt-6 text-rose-500 ' + className}>
+        <div className={'flex flex-wrap justify-center w-full text-rose-500 ' + className}>
             <PageLink href={route(route().current())} isEnabled={currentPage === 1} preserveScroll={preserveScroll}><IconChevronsLeft size={16} /></PageLink>
             <PageLink href={prevLink} isEnabled={currentPage === 1} preserveScroll={preserveScroll}><IconChevronLeft size={16} /></PageLink>
 
