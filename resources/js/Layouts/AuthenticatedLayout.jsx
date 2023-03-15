@@ -5,7 +5,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 
-export default function Authenticated({ header, children }) {
+export default function Authenticated({ children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const { auth } = usePage().props;
 
@@ -115,12 +115,6 @@ export default function Authenticated({ header, children }) {
                     </div>
                 </div>
             </nav>
-
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
-                </header>
-            )}
 
             <main className='flex flex-1 flex-col'>{children}</main>
         </div>

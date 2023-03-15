@@ -1,10 +1,12 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "./AuthenticatedLayout";
 
-export default function Content({ header, title, children }) {
+export default function Content({ title, children }) {
+    const { errors } = usePage().props;
+
     return (
-        <AuthenticatedLayout header={header}>
+        <AuthenticatedLayout>
             <Head title={title} />
 
             <div className="flex flex-1 flex-col justify-center items-center py-3 sm:py-6">
