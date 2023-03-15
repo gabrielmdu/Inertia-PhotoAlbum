@@ -13,7 +13,7 @@ class AlbumsController extends Controller
     {
         $albums = $request
             ->user()
-            ->getLatestAlbumsPaginated(20);
+            ->getLatestAlbumsPaginated(20, $request->only('search'));
 
         return AlbumResource::collection($albums);
     }

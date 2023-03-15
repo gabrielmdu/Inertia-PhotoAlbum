@@ -9,10 +9,13 @@ import {
 
 /** Link to a paginated result set */
 const PageLink = ({ href, isEnabled, isActive, preserveScroll, className = '', children }) => {
+    const { filters = {} } = usePage().props;
+
     return (
         <Link
             preserveScroll={preserveScroll}
             href={href}
+            data={filters}
             className={'flex items-center rounded mx-1 py-2 px-3 border border-rose-400 ' +
                 (isEnabled ? ' opacity-50 pointer-events-none ' : '') +
                 (isActive ? 'bg-rose-400 text-white pointer-events-none ' : 'hover:border-rose-300 hover:bg-rose-300 hover:text-white ') +

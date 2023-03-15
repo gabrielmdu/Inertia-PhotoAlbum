@@ -13,9 +13,10 @@ class AlbumsController extends Controller
     {
         $albums = $request
             ->user()
-            ->getLatestAlbumsPaginated();
+            ->getLatestAlbumsPaginated(9, $request->only('search'));
 
         return Inertia::render('Albums/Index', [
+            'filters' => $request->all('search'),
             'albums' => AlbumResource::collection($albums)
         ]);
     }

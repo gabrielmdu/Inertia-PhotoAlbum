@@ -47,9 +47,11 @@ class User extends Authenticatable
         return $this->hasMany(Album::class);
     }
 
-    public function getLatestAlbumsPaginated(int $perPage = 9)
+    public function getLatestAlbumsPaginated(int $perPage = 9, array $filters = [])
     {
-        return $this->albums()
+        return $this
+            ->albums()
+            ->filter($filters)
             ->orderBy('id', 'DESC')
             ->paginate($perPage);
     }
