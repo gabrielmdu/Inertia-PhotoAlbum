@@ -7,7 +7,7 @@ export default function Content({ title, children }) {
 
     return (
         <AuthenticatedLayout>
-            <Head title={title} />
+            <Head title={'Inertia Photo Album - ' + title} />
 
             <div className="flex flex-1 flex-col justify-center items-center py-3 sm:py-6">
                 <div className="flex flex-1 w-full max-w-7xl h-full sm:px-6 lg:px-8">
