@@ -45,5 +45,9 @@ class AlbumTest extends TestCase
         $filters = ['search' => 'hij'];
         $filteredAlbums = Album::filter($filters)->get();
         $this->assertCount(8, $filteredAlbums);
+
+        $filters = ['search' => 'No albums for this text'];
+        $filteredAlbums = Album::filter($filters)->get();
+        $this->assertCount(0, $filteredAlbums);
     }
 }

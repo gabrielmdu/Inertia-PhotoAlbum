@@ -34,7 +34,19 @@ class AlbumsRouteTest extends TestCase
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
                 ->component('Albums/Index')
-                ->has('albums', 3)
+                ->has('albums.data', 3)
+        );
+    }
+
+    public function test_user_cant_see_any_albums(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->get(route('albums.index'));
+
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
+                ->component('Albums/Index')
+                ->has('albums.data', 0)
         );
     }
 
