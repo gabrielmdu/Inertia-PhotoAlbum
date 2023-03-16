@@ -3,23 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\Album;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
+use Tests\HasUserTrait;
 use Tests\TestCase;
 
 class AlbumsRouteTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected User $user;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = User::factory()->create();
-    }
+    use HasUserTrait;
 
     public function test_user_can_see_albums(): void
     {

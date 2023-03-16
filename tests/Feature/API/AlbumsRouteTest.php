@@ -3,23 +3,15 @@
 namespace Tests\Feature\API;
 
 use App\Models\Album;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Tests\HasUserTrait;
 use Tests\TestCase;
 
 class AlbumsRouteTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected User $user;
-
-    public function setup(): void
-    {
-        parent::setUp();
-
-        $this->user = User::factory()->create();
-    }
+    use HasUserTrait;
 
     public function test_can_list_albums()
     {
