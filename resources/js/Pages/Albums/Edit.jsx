@@ -39,7 +39,6 @@ export default function EditAlbum({ album }) {
                         name="name"
                         value={data.name}
                         className="mt-1 block w-full max-w-xl"
-                        autoComplete="name"
                         isFocused={true}
                         onChange={onHandleChange}
                         required
@@ -62,6 +61,24 @@ export default function EditAlbum({ album }) {
                     />
 
                     <InputError message={errors.description} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="cover_id" value="Cover Id" />
+
+                    <TextInput
+                        id="cover_id"
+                        name="cover_id"
+                        value={data.cover_id}
+                        className="mt-1 block w-full max-w-xl"
+                        onChange={onHandleChange}
+                        type='number'
+                        min={1}
+                        max={1000}
+                        required
+                    />
+
+                    <InputError message={errors.cover_id} className="mt-2" />
                 </div>
 
                 <PrimaryButton className="mt-4" disabled={processing}>

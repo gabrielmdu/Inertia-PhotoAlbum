@@ -27,7 +27,7 @@ class StoreAlbumRequest extends FormRequest
         return [
             'name' => 'required|string|min:3|max:100',
             'description' => 'string|max:300',
-            'cover_id' => 'required|int'
+            'cover_id' => 'required|int|between:1,1000'
         ];
     }
 }
