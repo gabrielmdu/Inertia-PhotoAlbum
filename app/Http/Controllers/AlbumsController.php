@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
 use Illuminate\Http\Request;
@@ -28,5 +29,14 @@ class AlbumsController extends Controller
         return Inertia::render('Albums/Edit', [
             'album' => new AlbumResource($album)
         ]);
+    }
+
+    public function update(StoreAlbumRequest $request, Album $album) 
+    {
+        $data = $request->validated();
+
+        $album->update($data);
+
+        return redirect(route('albums.index'))->with('success', 'Album updated');
     }
 }
