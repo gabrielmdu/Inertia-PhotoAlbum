@@ -23,6 +23,7 @@ Route::name('api.')->group(function () {
         });
 
         Route::get('/albums', [AlbumsController::class, 'index'])->name('albums.index');
+        Route::put('/albums/{album}', [AlbumsController::class, 'update'])->name('albums.update');
     });
 
     Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');

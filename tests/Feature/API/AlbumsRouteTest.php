@@ -5,6 +5,7 @@ namespace Tests\Feature\API;
 use App\Models\Album;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\HasUserTrait;
 use Tests\TestCase;
 
@@ -60,5 +61,32 @@ class AlbumsRouteTest extends TestCase
 
         $response = $this->get(route('api.albums.index', ['search' => 'bcde']));
         $response->assertJsonCount(0, 'data');
+    }
+
+    public function test_can_update_album()
+    {
+        $album = Album::factory()->create(['user_id' => $this->user->id]);
+
+        $this->user->albums()->save($album);
+
+        Sanctum::actingAs($this->user);
+
+        $newName = 'This is the new name';
+        $newDescription = 'This is the new description.';
+        $newCoverId = 5;
+
+        $response = $this->json('PUT', route('api.albums.update', ['album' => $album->id]), [
+            'name' => $newName,
+            'description' => $newDescription,
+            'cover_id' => $newCoverId, 
+        ]);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $album->refresh();
+
+        $this->assertEquals($newName, $album->name);
+        $this->assertEquals($newDescription, $album->description);
+        $this->assertEquals($newCoverId, $album->cover_id);
     }
 }
