@@ -42,7 +42,7 @@ class AlbumsRouteTest extends TestCase
         );
     }
 
-    public function user_can_view_own_album_edit_page()
+    public function test_user_can_view_own_album_edit_page()
     {
         $album = $this->user->albums()->create([
             'name' => 'My Album 1',
@@ -57,12 +57,42 @@ class AlbumsRouteTest extends TestCase
             fn (AssertableInertia $page) => $page
                 ->component('Albums/Edit')
                 ->has(
-                    'album',
+                    'album.data',
                     fn (AssertableInertia $a) => $a
                         ->where('id', $album->id)
                         ->where('name', $album->name)
                         ->where('description', $album->description)
+                        ->where('cover_id', $album->cover_id)
                 )
         );
+    }
+
+    public function test_user_can_update_album(): void
+    {
+        $album = $this->user->albums()->create([
+            'name' => 'My Album 1',
+            'description' => 'My description 1',
+            'cover_id' => 1,
+        ]);
+
+        $newName = 'My Album Edited';
+        $newDescription = 'Description edited.';
+        $newCoverId = 2;
+
+        $response = $this->actingAs($this->user)
+            ->put(route('albums.update', [
+                'album' => $album->id,
+                'name' => $newName,
+                'description' => $newDescription,
+                'cover_id' => $newCoverId,
+            ]));
+
+        $response->assertRedirect(route('albums.index'));
+
+        $album->refresh();
+
+        $this->assertEquals($newName, $album->name);
+        $this->assertEquals($newDescription, $album->description);
+        $this->assertEquals($newCoverId, $album->cover_id);
     }
 }
