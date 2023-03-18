@@ -13,7 +13,7 @@ class AlbumPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class AlbumPolicy
      */
     public function view(User $user, Album $album): bool
     {
-        
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class AlbumPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class AlbumPolicy
      */
     public function restore(User $user, Album $album): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -61,6 +61,6 @@ class AlbumPolicy
      */
     public function forceDelete(User $user, Album $album): bool
     {
-        //
+        return false;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAlbumRequest;
+use App\Http\Requests\UpdateAlbumRequest;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
 use Illuminate\Http\Request;
@@ -12,6 +12,8 @@ class AlbumsController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Album::class);
+
         $albums = $request
             ->user()
             ->getLatestAlbumsPaginated(9, $request->only('search'));
@@ -31,7 +33,7 @@ class AlbumsController extends Controller
         ]);
     }
 
-    public function update(StoreAlbumRequest $request, Album $album) 
+    public function update(UpdateAlbumRequest $request, Album $album) 
     {
         $data = $request->validated();
 

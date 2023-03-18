@@ -2,18 +2,18 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Album;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAlbumRequest extends FormRequest
+class UpdateAlbumRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
+        $album = $this->route('album');
 
-        return $this->user()->can('create', Album::class);
+        return $album && $this->user()->can('update', $album);
     }
 
     /**
@@ -24,9 +24,9 @@ class StoreAlbumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:100',
+            'name' => 'string|min:3|max:100',
             'description' => 'string|max:300',
-            'cover_id' => 'required|int|between:1,1000'
+            'cover_id' => 'int|between:1,1000',
         ];
     }
 }
