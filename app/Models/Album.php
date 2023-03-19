@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\AlbumUpdated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,15 @@ class Album extends Model
         'name',
         'description',
         'cover_id',
+    ];
+
+     /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'updated' => AlbumUpdated::class,
     ];
 
     public function user()

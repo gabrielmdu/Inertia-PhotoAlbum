@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\API;
 
+use App\Events\AlbumUpdated;
 use App\Models\Album;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Laravel\Sanctum\Sanctum;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\HasUserTrait;
@@ -75,6 +77,8 @@ class AlbumsRouteTest extends TestCase
         $newDescription = 'This is the new description.';
         $newCoverId = 5;
 
+        Event::fake();
+
         $response = $this->json('PUT', route('api.albums.update', ['album' => $album->id]), [
             'name' => $newName,
             'description' => $newDescription,
@@ -82,6 +86,8 @@ class AlbumsRouteTest extends TestCase
         ]);
 
         $response->assertStatus(Response::HTTP_OK);
+
+        Event::assertDispatched(AlbumUpdated::class);
 
         $album->refresh();
 

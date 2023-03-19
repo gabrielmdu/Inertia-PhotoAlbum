@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Events\AlbumUpdated;
 use App\Models\Album;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia;
 use Tests\HasUserTrait;
 use Tests\TestCase;
@@ -79,6 +81,8 @@ class AlbumsRouteTest extends TestCase
         $newDescription = 'Description edited.';
         $newCoverId = 2;
 
+        Event::fake();
+
         $response = $this->actingAs($this->user)
             ->put(route('albums.update', [
                 'album' => $album->id,
@@ -86,6 +90,8 @@ class AlbumsRouteTest extends TestCase
                 'description' => $newDescription,
                 'cover_id' => $newCoverId,
             ]));
+
+        Event::assertDispatched(AlbumUpdated::class);
 
         $response->assertRedirect(route('albums.index'));
 
