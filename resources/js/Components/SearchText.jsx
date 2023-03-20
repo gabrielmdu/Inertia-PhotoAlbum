@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useUpdateEffect } from "react-use";
 
 /**
@@ -10,15 +10,15 @@ import { useUpdateEffect } from "react-use";
  */
 export default function SearchText({ text = '', searchCallback, callbackTriggerTime = 1000 }) {
     const [searchText, setSearchText] = useState(text);
-    const [callbackTimeout, setCallbackTimeout] = useState(0);
+    const callbackTimeout = useRef(0);
 
     useUpdateEffect(() => {
-        clearTimeout(callbackTimeout);
+        clearTimeout(callbackTimeout.current);
 
         if (searchText.length === 0) {
             searchCallback(searchText);
         } else {
-            setCallbackTimeout(setTimeout(() => searchCallback(searchText), callbackTriggerTime));
+            callbackTimeout.current = setTimeout(() => searchCallback(searchText), callbackTriggerTime);
         }
     }, [searchText]);
 
