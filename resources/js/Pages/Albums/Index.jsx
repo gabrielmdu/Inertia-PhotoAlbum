@@ -7,9 +7,10 @@ import { router, usePage } from '@inertiajs/react';
 import NoResults from '@/Components/NoResults';
 import { IconAlbumOff } from '@tabler/icons-react';
 import CreateButton from '@/Components/CreateButton';
+import FlashMessage from '@/Components/FlashMessage';
 
 export default function AlbumsIndex({ albums }) {
-    const { filters } = usePage().props;
+    const { filters, flash } = usePage().props;
 
     function searchCallback(searchText) {
         router.get(route(route().current()), {
@@ -19,6 +20,8 @@ export default function AlbumsIndex({ albums }) {
 
     return (
         <ContentLayout title='Albums'>
+            {flash.success && <FlashMessage>{flash.success}</FlashMessage>}
+
             <div className='p-3 text-3xl bg-gradient-to-r from-cyan-500 to-blue-500 rounded text-gray-100 font-mono'>My Albums</div>
 
             <div className='flex items-center justify-between my-6'>
