@@ -6,32 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
-import Modal from "@/Components/Modal";
-
-const PicturesModal = ({ pictures, onPictureClick, onPicturesScroll, ...props }) => {
-    return (
-        <Modal {...props}>
-            <div className="flex flex-col px-3 py-4 h-[32rem]">
-                <div className="mb-2 px-2 py-2 rounded bg-lime-500 text-gray-700 shadow-inner">
-                    Select a picture
-                </div>
-
-                <div
-                    id="scroll-pictures"
-                    className="flex-1 border border-blue-100 overflow-y-auto grid grid-cols-3 gap-2"
-                    onScroll={onPicturesScroll}
-                >
-                    {pictures.map(picId =>
-                        <div key={picId} className='relative group cursor-pointer' onClick={() => onPictureClick(picId)}>
-                            <img className="group-hover:opacity-60 transition ease-in-out duration-100" src={`https://picsum.photos/id/${picId}/200`}></img>
-                            <div className="absolute opacity-0 group-hover:opacity-100 rounded bg-orange-400 text-gray-200 px-4 py-3 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">{picId}</div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </Modal>
-    );
-};
+import PicturesModal from "@/Components/PicturesModal";
 
 export default function EditAlbum({ album }) {
     const { data, setData, put, processing, errors, reset } = useForm({
