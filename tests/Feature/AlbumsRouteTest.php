@@ -44,6 +44,43 @@ class AlbumsRouteTest extends TestCase
         );
     }
 
+    public function test_user_can_view_create_album_page()
+    {
+        $response = $this->actingAs($this->user)
+            ->get(route('albums.create'));
+
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
+                ->component('Albums/Create')
+        );
+    }
+
+    public function test_user_can_store_album()
+    {
+        $albumData = [
+            'name' => 'ABC',
+            'description' => 'this is my description',
+            'cover_id' => 200,
+        ];
+
+        $this->actingAs($this->user)
+            ->postJson(route('albums.store', $albumData));
+
+        $this->assertDatabaseHas('albums', $albumData);
+    }
+
+    public function test_user_cannot_store_album_with_wrong_params()
+    {
+        $response = $this->actingAs($this->user)
+            ->postJson(route('albums.store', [
+                'name' => 'AB',
+                'description' => 'this is my description',
+                'cover_id' => -1,
+            ]));
+
+        $response->assertJsonStructure(['errors' => ['name', 'cover_id']]);
+    }
+
     public function test_user_can_view_own_album_edit_page()
     {
         $album = $this->user->albums()->create([
