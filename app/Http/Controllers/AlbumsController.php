@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
@@ -24,6 +25,24 @@ class AlbumsController extends Controller
         ]);
     }
 
+    public function create(Request $request)
+    {
+        $this->authorize('create', Album::class);
+
+        return Inertia::render('Albums/Create');
+    }
+
+    public function store(StoreAlbumRequest $request)
+    {
+        $data = $request->validated();
+
+        $user = $request->user();
+
+        $user->albums()->create(array_merge(['user_id' => $user->id], $data));
+
+        return redirect(route('albums.index'))->with('success', 'Album created');
+    }
+
     public function edit(Request $request, Album $album)
     {
         $this->authorize('update', $album);
@@ -33,7 +52,7 @@ class AlbumsController extends Controller
         ]);
     }
 
-    public function update(UpdateAlbumRequest $request, Album $album) 
+    public function update(UpdateAlbumRequest $request, Album $album)
     {
         $data = $request->validated();
 

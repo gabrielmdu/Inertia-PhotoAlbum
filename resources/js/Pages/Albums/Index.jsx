@@ -6,6 +6,7 @@ import SearchText from '@/Components/SearchText';
 import { router, usePage } from '@inertiajs/react';
 import NoResults from '@/Components/NoResults';
 import { IconAlbumOff } from '@tabler/icons-react';
+import CreateButton from '@/Components/CreateButton';
 
 export default function AlbumsIndex({ albums }) {
     const { filters } = usePage().props;
@@ -22,6 +23,7 @@ export default function AlbumsIndex({ albums }) {
 
             <div className='flex items-center justify-between my-6'>
                 <SearchText text={filters.search || ''} searchCallback={searchCallback} callbackTriggerTime={250} />
+                <CreateButton href={route('albums.create')}>Create Album</CreateButton>
             </div>
 
             {
