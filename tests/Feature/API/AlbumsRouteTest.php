@@ -77,7 +77,7 @@ class AlbumsRouteTest extends TestCase
         $newDescription = 'This is the new description.';
         $newCoverId = 5;
 
-        Event::fake();
+        Event::fake([AlbumUpdated::class]);
 
         $response = $this->json('PUT', route('api.albums.update', ['album' => $album->id]), [
             'name' => $newName,

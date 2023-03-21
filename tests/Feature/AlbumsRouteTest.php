@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Events\AlbumStored;
 use App\Events\AlbumUpdated;
 use App\Models\Album;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -63,8 +64,12 @@ class AlbumsRouteTest extends TestCase
             'cover_id' => 200,
         ];
 
+        Event::fake([AlbumStored::class]);
+
         $this->actingAs($this->user)
             ->postJson(route('albums.store', $albumData));
+
+        Event::assertDispatched(AlbumStored::class);
 
         $this->assertDatabaseHas('albums', $albumData);
     }
@@ -118,7 +123,7 @@ class AlbumsRouteTest extends TestCase
         $newDescription = 'Description edited.';
         $newCoverId = 2;
 
-        Event::fake();
+        Event::fake([AlbumUpdated::class]);
 
         $response = $this->actingAs($this->user)
             ->put(route('albums.update', [

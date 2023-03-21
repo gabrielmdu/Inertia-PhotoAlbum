@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Events\AlbumStored;
 use App\Events\AlbumUpdated;
 use App\Listeners\SendAlbumNotification;
 use App\Models\Album;
@@ -21,6 +22,19 @@ class AlbumListenerTest extends TestCase
         $album->id = 100;
 
         $listener = new SendAlbumNotification();
-        $listener->handle(new AlbumUpdated($album));
+        $listener->handleAlbumUpdated(new AlbumUpdated($album));
+    }
+
+    public function test_send_album_stored_notification_listener()
+    {
+        Log::shouldReceive('write')
+            ->once()
+            ->with('info', 'album stored: ' . 200);
+
+        $album = Mockery::mock(Album::class)->makePartial();
+        $album->id = 200;
+
+        $listener = new SendAlbumNotification();
+        $listener->handleAlbumStored(new AlbumStored($album));
     }
 }
