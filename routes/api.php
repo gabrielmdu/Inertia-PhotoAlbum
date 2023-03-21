@@ -20,10 +20,10 @@ Route::name('api.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
-        });
+        })->name('user');
 
-        Route::get('/albums', [AlbumsController::class, 'index'])->name('albums.index');
-        Route::put('/albums/{album}', [AlbumsController::class, 'update'])->name('albums.update');
+        Route::resource('albums', AlbumsController::class)
+            ->only(['index', 'update', 'store']);
     });
 
     Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');

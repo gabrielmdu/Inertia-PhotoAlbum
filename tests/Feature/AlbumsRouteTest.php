@@ -67,7 +67,7 @@ class AlbumsRouteTest extends TestCase
         Event::fake([AlbumStored::class]);
 
         $this->actingAs($this->user)
-            ->postJson(route('albums.store', $albumData));
+            ->postJson(route('albums.store'), $albumData);
 
         Event::assertDispatched(AlbumStored::class);
 

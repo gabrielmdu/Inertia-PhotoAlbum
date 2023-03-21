@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API;
 
+use App\Events\AlbumStored;
 use App\Events\AlbumUpdated;
 use App\Models\Album;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -65,6 +66,27 @@ class AlbumsRouteTest extends TestCase
         $response->assertJsonCount(0, 'data');
     }
 
+    public function test_can_create_album()
+    {
+        Sanctum::actingAs($this->user);
+
+        $albumData = [
+            'name' => 'ABC',
+            'description' => 'this is my description',
+            'cover_id' => 200,
+        ];
+
+        Event::fake([AlbumStored::class]);
+
+        $response = $this->postJson(route('api.albums.store'), $albumData);
+
+        Event::assertDispatched(AlbumStored::class);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertDatabaseHas('albums', $albumData);
+    }
+
     public function test_can_update_album()
     {
         $album = Album::factory()->create(['user_id' => $this->user->id]);
@@ -82,7 +104,7 @@ class AlbumsRouteTest extends TestCase
         $response = $this->json('PUT', route('api.albums.update', ['album' => $album->id]), [
             'name' => $newName,
             'description' => $newDescription,
-            'cover_id' => $newCoverId, 
+            'cover_id' => $newCoverId,
         ]);
 
         $response->assertStatus(Response::HTTP_OK);

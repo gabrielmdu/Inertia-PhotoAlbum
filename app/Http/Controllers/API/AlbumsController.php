@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
@@ -27,5 +28,14 @@ class AlbumsController extends Controller
         $data = $request->validated();
 
         $album->update($data);
+    }
+
+    public function store(StoreAlbumRequest $request)
+    {
+        $data = $request->validated();
+        
+        $user = $request->user();
+
+        $user->albums()->create(array_merge(['user_id' => $user->id], $data));
     }
 }
