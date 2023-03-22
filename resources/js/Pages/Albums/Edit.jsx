@@ -4,9 +4,10 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
-import { useForm } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
 import PicturesModal from "@/Components/PicturesModal";
+import ConfirmModal from "@/Components/ConfirmModal";
 
 export default function EditAlbum({ album }) {
     const { data, setData, put, processing, errors, reset } = useForm({
@@ -16,6 +17,7 @@ export default function EditAlbum({ album }) {
     });
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
     const maxPicId = 1000;
     const picsPerScroll = 12;
@@ -79,7 +81,16 @@ export default function EditAlbum({ album }) {
                 onPicturesScroll={onHandleScroll}
             />
 
-            <form className="mt-10" onSubmit={submit}>
+            <ConfirmModal
+                show={deleteModalIsOpen}
+                onClose={() => setDeleteModalIsOpen(false)}
+                onCancel={() => setDeleteModalIsOpen(false)}
+                onConfirm={() => router.delete(route('albums.destroy', { album: album.data.id }))}
+            >
+                Confirm delete album {album.data.name}?
+            </ConfirmModal>
+
+            <form className="mt-10 max-w-xl" onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -87,7 +98,7 @@ export default function EditAlbum({ album }) {
                         id="name"
                         name="name"
                         value={data.name}
-                        className="mt-1 block w-full max-w-xl"
+                        className="mt-1 block w-full"
                         isFocused={true}
                         onChange={onHandleChange}
                         required
@@ -103,7 +114,7 @@ export default function EditAlbum({ album }) {
                         id="description"
                         name="description"
                         value={data.description}
-                        className="mt-1 block w-full max-w-xl"
+                        className="mt-1 block w-full"
                         rows={3}
                         maxLength={300}
                         onChange={onHandleChange}
@@ -119,7 +130,7 @@ export default function EditAlbum({ album }) {
                         id="cover_id"
                         name="cover_id"
                         value={data.cover_id}
-                        className="mt-1 block w-full max-w-xl"
+                        className="mt-1 block w-full"
                         onChange={onHandleChange}
                         type='number'
                         min={1}
@@ -130,7 +141,7 @@ export default function EditAlbum({ album }) {
                     <InputError message={errors.cover_id} className="mt-2" />
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center sm:justify-evenly sm:items-end mt-1 w-full max-w-xl p-3 border rounded border-gray-300 bg-gradient-to-t from-gray-100 to-indigo-50">
+                <div className="flex flex-col sm:flex-row items-center sm:justify-evenly sm:items-start mt-1 w-full p-3 border rounded border-gray-300 bg-gradient-to-t from-gray-100 to-indigo-50">
                     <img src={`https://picsum.photos/id/${data.cover_id}/400/300`} alt="" />
 
                     <button
@@ -142,9 +153,18 @@ export default function EditAlbum({ album }) {
                     </button>
                 </div>
 
-                <PrimaryButton className="mt-4" disabled={processing}>
-                    Confirm
-                </PrimaryButton>
+                <div className="flex justify-between items-center mt-4">
+                    <button
+                        type="button"
+                        onClick={() => setDeleteModalIsOpen(true)}
+                        className="underline text-red-400"
+                    >
+                        Delete album
+                    </button>
+                    <PrimaryButton disabled={processing}>
+                        Update album
+                    </PrimaryButton>
+                </div>
             </form>
         </ContentLayout>
     );

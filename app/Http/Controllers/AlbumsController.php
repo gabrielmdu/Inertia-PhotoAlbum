@@ -60,4 +60,13 @@ class AlbumsController extends Controller
 
         return redirect(route('albums.index'))->with('success', 'Album updated');
     }
+
+    public function destroy(Request $request, Album $album)
+    {
+        $this->authorize('delete', $album);
+
+        $album->delete();
+
+        return redirect(route('albums.index'))->with('success', 'Album deleted');
+    }
 }
