@@ -1,3 +1,14 @@
+// ----- constants
+
+export const BUTTON_TYPE = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info'
+};
+
+// ----- functions
+
 /**
  * 
  * @param {*} links 
