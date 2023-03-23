@@ -8,6 +8,9 @@ import { router, useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
 import PicturesModal from "@/Components/PicturesModal";
 import ConfirmModal from "@/Components/ConfirmModal";
+import Button from "@/Components/Button/Button";
+import { BUTTON_TYPE } from "@/common";
+import { IconClick } from "@tabler/icons-react";
 
 export default function EditAlbum({ album }) {
     const { data, setData, put, processing, errors, reset } = useForm({
@@ -143,14 +146,12 @@ export default function EditAlbum({ album }) {
 
                 <div className="flex flex-col sm:flex-row items-center sm:justify-evenly sm:items-start mt-1 w-full p-3 border rounded border-gray-300 bg-gradient-to-t from-gray-100 to-indigo-50">
                     <img src={`https://picsum.photos/id/${data.cover_id}/400/300`} alt="" />
-
-                    <button
-                        type="button"
-                        className='flex items-center mt-2 sm:mt-0 px-4 py-2 bg-sky-600 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-sky-700 active:bg-sky-800 transition ease-in-out duration-150'
+                    <Button colorType={BUTTON_TYPE.INFO}
+                        className='mt-2 sm:mt-0 whitespace-nowrap'
                         onClick={openPhotosModal}
                     >
-                        Pick one
-                    </button>
+                        Pick one <IconClick className="inline" size={22} />
+                    </Button>
                 </div>
 
                 <div className="flex justify-between items-center mt-4">

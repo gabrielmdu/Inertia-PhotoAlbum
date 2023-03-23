@@ -1,5 +1,5 @@
 import { BUTTON_TYPE } from "@/common";
-import { IconAlertCircle, IconQuestionMark } from "@tabler/icons-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import React from "react";
 import Button from "./Button/Button";
 import Modal from "./Modal";
