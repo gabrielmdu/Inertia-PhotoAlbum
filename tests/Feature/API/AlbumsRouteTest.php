@@ -5,6 +5,7 @@ namespace Tests\Feature\API;
 use App\Events\AlbumStored;
 use App\Events\AlbumUpdated;
 use App\Models\Album;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Laravel\Sanctum\Sanctum;
@@ -95,26 +96,46 @@ class AlbumsRouteTest extends TestCase
 
         Sanctum::actingAs($this->user);
 
-        $newName = 'This is the new name';
-        $newDescription = 'This is the new description.';
-        $newCoverId = 5;
+        $albumData = [
+            'name' => 'This is the new name',
+            'description' => 'This is the new description.',
+            'cover_id' => 5,
+        ];
+
 
         Event::fake([AlbumUpdated::class]);
 
-        $response = $this->json('PUT', route('api.albums.update', ['album' => $album->id]), [
-            'name' => $newName,
-            'description' => $newDescription,
-            'cover_id' => $newCoverId,
-        ]);
+        $response = $this->putJson(route('api.albums.update', ['album' => $album->id]), $albumData);
 
         $response->assertStatus(Response::HTTP_OK);
 
         Event::assertDispatched(AlbumUpdated::class);
 
-        $album->refresh();
+        $this->assertDatabaseHas('albums', $albumData);
+    }
 
-        $this->assertEquals($newName, $album->name);
-        $this->assertEquals($newDescription, $album->description);
-        $this->assertEquals($newCoverId, $album->cover_id);
+    public function test_can_delete_album()
+    {
+        $album = Album::factory()->create(['user_id' => $this->user->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->delete(route('api.albums.destroy', ['album' => $album->id]));
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertSoftDeleted($album);
+    }
+
+    public function test_cant_delete_not_owned_album()
+    {
+        $newUser = User::factory()->create();
+        $album = Album::factory()->create(['user_id' => $newUser->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->deleteJson(route('api.albums.destroy', ['album' => $album->id]));
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

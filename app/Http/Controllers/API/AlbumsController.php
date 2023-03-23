@@ -38,4 +38,11 @@ class AlbumsController extends Controller
 
         $user->albums()->create(array_merge(['user_id' => $user->id], $data));
     }
+
+    public function destroy(Request $request, Album $album)
+    {
+        $this->authorize('delete', $album);
+
+        $album->delete();
+    }
 }

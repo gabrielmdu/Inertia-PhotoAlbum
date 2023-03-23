@@ -143,4 +143,14 @@ class AlbumsRouteTest extends TestCase
         $this->assertEquals($newDescription, $album->description);
         $this->assertEquals($newCoverId, $album->cover_id);
     }
+
+    public function test_user_can_delete_own_album()
+    {
+        $album = Album::factory()->create(['user_id' => $this->user->id]);
+
+        $this->actingAs($this->user)
+            ->delete(route('albums.destroy', ['album' => $album->id]));
+
+        $this->assertSoftDeleted($album);
+    }
 }
