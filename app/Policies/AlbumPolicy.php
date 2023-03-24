@@ -21,7 +21,7 @@ class AlbumPolicy
      */
     public function view(User $user, Album $album): bool
     {
-        return true;
+        return $user->id === $album->user_id;
     }
 
     /**
@@ -46,21 +46,5 @@ class AlbumPolicy
     public function delete(User $user, Album $album): bool
     {
         return $this->update($user, $album);
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Album $album): bool
-    {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Album $album): bool
-    {
-        return false;
     }
 }
