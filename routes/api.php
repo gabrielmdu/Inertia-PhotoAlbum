@@ -27,4 +27,9 @@ Route::name('api.')->group(function () {
     });
 
     Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');
+
+    // fallback route for any methods
+    Route::any('{any}', fn () => response('', 404))
+        ->where('any', '.*')
+        ->name('404');
 });
