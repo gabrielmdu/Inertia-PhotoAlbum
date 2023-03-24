@@ -23,6 +23,13 @@ class AlbumsController extends Controller
         return AlbumResource::collection($albums);
     }
 
+    public function show(Request $request, Album $album)
+    {
+        $this->authorize('view', $album);
+
+        return new AlbumResource($album);
+    }
+
     public function update(UpdateAlbumRequest $request, Album $album)
     {
         $data = $request->validated();

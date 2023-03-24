@@ -19,7 +19,7 @@ class AlbumsRouteTest extends TestCase
     public function test_user_can_see_albums(): void
     {
         $this->user->albums()->saveMany(
-            Album::factory(3)->create(['user_id' => $this->user->id])
+            Album::factory(3)->createQuietly(['user_id' => $this->user->id])
         );
 
         $response = $this
@@ -88,7 +88,7 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_view_own_album_edit_page()
     {
-        $album = $this->user->albums()->create([
+        $album = $this->user->albums()->createQuietly([
             'name' => 'My Album 1',
             'description' => fake()->text(),
             'cover_id' => 123,
@@ -113,7 +113,7 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_update_album(): void
     {
-        $album = $this->user->albums()->create([
+        $album = $this->user->albums()->createQuietly([
             'name' => 'My Album 1',
             'description' => 'My description 1',
             'cover_id' => 1,
@@ -146,7 +146,7 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_delete_own_album()
     {
-        $album = Album::factory()->create(['user_id' => $this->user->id]);
+        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
 
         $this->actingAs($this->user)
             ->delete(route('albums.destroy', ['album' => $album->id]));

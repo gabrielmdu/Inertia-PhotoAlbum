@@ -23,7 +23,7 @@ Route::name('api.')->group(function () {
         })->name('user');
 
         Route::resource('albums', AlbumsController::class)
-            ->only(['index', 'update', 'store', 'destroy']);
+            ->except(['create', 'edit']);
     });
 
     Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');

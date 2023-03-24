@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\HasUserTrait;
 use Tests\TestCase;
 
@@ -18,10 +17,40 @@ class AlbumsRouteTest extends TestCase
     use RefreshDatabase;
     use HasUserTrait;
 
+    public function test_can_view_own_album()
+    {
+        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
+
+        $this->user->albums()->save($album);
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->get(route('api.albums.show', ['album' => $album->id]));
+
+        $response->assertOk();
+
+        /** @var array */
+        $modelData = $album->only(['id', 'name', 'description', 'cover_id']);
+
+        $response->assertJsonFragment($modelData);
+    }
+
+    public function test_cant_view_not_owned_album()
+    {
+        $user = User::factory()->create();
+        $album = Album::factory()->createQuietly(['user_id' => $user->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->get(route('api.albums.show', ['album' => $album->id]));
+
+        $response->assertForbidden();
+    }
+
     public function test_can_list_albums()
     {
         $this->user->albums()->saveMany(
-            Album::factory(35)->create(['user_id' => $this->user->id])
+            Album::factory(35)->createQuietly(['user_id' => $this->user->id])
         );
 
         Sanctum::actingAs($this->user);
@@ -35,7 +64,7 @@ class AlbumsRouteTest extends TestCase
     public function test_can_paginate_albums()
     {
         $this->user->albums()->saveMany(
-            Album::factory(35)->create(['user_id' => $this->user->id])
+            Album::factory(35)->createQuietly(['user_id' => $this->user->id])
         );
 
         Sanctum::actingAs($this->user);
@@ -55,7 +84,7 @@ class AlbumsRouteTest extends TestCase
                     ['name' => 'ABC', 'description' => 'GHI'],
                     ['name' => 'DEF', 'description' => 'JKL'],
                 )
-                ->create(['user_id' => $this->user->id])
+                ->createQuietly(['user_id' => $this->user->id])
         );
 
         Sanctum::actingAs($this->user);
@@ -83,14 +112,14 @@ class AlbumsRouteTest extends TestCase
 
         Event::assertDispatched(AlbumStored::class);
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertOk();
 
         $this->assertDatabaseHas('albums', $albumData);
     }
 
     public function test_can_update_album()
     {
-        $album = Album::factory()->create(['user_id' => $this->user->id]);
+        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
 
         $this->user->albums()->save($album);
 
@@ -102,12 +131,11 @@ class AlbumsRouteTest extends TestCase
             'cover_id' => 5,
         ];
 
-
         Event::fake([AlbumUpdated::class]);
 
         $response = $this->putJson(route('api.albums.update', ['album' => $album->id]), $albumData);
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertOk();
 
         Event::assertDispatched(AlbumUpdated::class);
 
@@ -116,13 +144,13 @@ class AlbumsRouteTest extends TestCase
 
     public function test_can_delete_album()
     {
-        $album = Album::factory()->create(['user_id' => $this->user->id]);
+        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
 
         Sanctum::actingAs($this->user);
 
         $response = $this->delete(route('api.albums.destroy', ['album' => $album->id]));
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertOk();
 
         $this->assertSoftDeleted($album);
     }
@@ -130,12 +158,12 @@ class AlbumsRouteTest extends TestCase
     public function test_cant_delete_not_owned_album()
     {
         $newUser = User::factory()->create();
-        $album = Album::factory()->create(['user_id' => $newUser->id]);
+        $album = Album::factory()->createQuietly(['user_id' => $newUser->id]);
 
         Sanctum::actingAs($this->user);
 
         $response = $this->deleteJson(route('api.albums.destroy', ['album' => $album->id]));
 
-        $response->assertStatus(Response::HTTP_FORBIDDEN);
+        $response->assertForbidden();
     }
 }
