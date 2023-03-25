@@ -25,6 +25,13 @@ class AlbumsController extends Controller
         ]);
     }
 
+    public function show(Request $request, Album $album)
+    {
+        $this->authorize('view', $album);
+
+        return Inertia::render('Albums/Show', ['album' => new AlbumResource($album)]);
+    }
+
     public function create(Request $request)
     {
         $this->authorize('create', Album::class);

@@ -10,7 +10,7 @@ export default function Album({ album }) {
 
     return (
         <Link
-            href={route('albums.edit', { album: album.id })}
+            href={route('albums.show', { album: album.id })}
             className="group relative w-full drop-shadow-md sm:w-58 h-52 lg:w-72 lg:h-72 xl:w-80 rounded-t-md border border-gray-500 border-b-4 border-b-gray-600"
         >
             <div className="transition duration-150 ease-out absolute w-full h-full bg-no-repeat bg-center bg-cover opacity-50 group-hover:opacity-70 blur-[2px] group-hover:blur-none" style={{ backgroundImage: `url(${bgUrl})` }}></div>
