@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Events\AlbumStored;
 use App\Events\AlbumUpdated;
 use App\Models\Album;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia;
@@ -43,6 +44,40 @@ class AlbumsRouteTest extends TestCase
                 ->component('Albums/Index')
                 ->has('albums.data', 0)
         );
+    }
+
+    public function test_user_can_view_show_album_page()
+    {
+        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
+
+        $response = $this->actingAs($this->user)
+            ->get(route('albums.show', ['album' => $album->id]));
+
+        $response->assertOk();
+
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Albums/Show')
+            ->has(
+                'album.data',
+                fn (AssertableInertia $data) => $data
+                    ->whereAll([
+                        'id' => $album->id,
+                        'name' => $album->name,
+                        'description' => $album->description,
+                        'cover_id' => $album->cover_id,
+                    ])
+            ));
+    }
+
+    public function test_user_cant_view_not_owned_show_album_page()
+    {
+        $otherUser = User::factory()->create();
+        $album = Album::factory()->createQuietly(['user_id' => $otherUser->id]);
+
+        $response = $this->actingAs($this->user)
+            ->get(route('albums.show', compact('album')));
+
+        $response->assertRedirect(route('dashboard'));
     }
 
     public function test_user_can_view_create_album_page()
