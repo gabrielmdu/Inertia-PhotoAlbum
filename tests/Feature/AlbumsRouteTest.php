@@ -65,6 +65,8 @@ class AlbumsRouteTest extends TestCase
                         'name' => $album->name,
                         'description' => $album->description,
                         'cover_id' => $album->cover_id,
+                        'created_at' => $album->created_at->getTimestampMs(),
+                        'updated_at' => $album->updated_at->getTimestampMs(),
                     ])
             ));
     }
@@ -137,11 +139,15 @@ class AlbumsRouteTest extends TestCase
                 ->component('Albums/Edit')
                 ->has(
                     'album.data',
-                    fn (AssertableInertia $a) => $a
-                        ->where('id', $album->id)
-                        ->where('name', $album->name)
-                        ->where('description', $album->description)
-                        ->where('cover_id', $album->cover_id)
+                    fn (AssertableInertia $data) => $data
+                        ->whereAll([
+                            'id' => $album->id,
+                            'name' => $album->name,
+                            'description' => $album->description,
+                            'cover_id' => $album->cover_id,
+                            'created_at' => $album->created_at->getTimestampMs(),
+                            'updated_at' => $album->updated_at->getTimestampMs(),
+                        ])
                 )
         );
     }

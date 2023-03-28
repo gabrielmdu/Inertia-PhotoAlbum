@@ -20,6 +20,8 @@
     },
     "dependencies": {
         "@tabler/icons-react": "^2.10.0",
+        "javascript-time-ago": "^2.5.9",
+        "react-time-ago": "^7.2.1",
         "react-use": "^17.4.0"
     }
 }
