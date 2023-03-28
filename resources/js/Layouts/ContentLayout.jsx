@@ -1,9 +1,10 @@
+import FlashMessage from "@/Components/FlashMessage";
 import { Head, usePage } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "./AuthenticatedLayout";
 
 export default function Content({ title, className = '', children }) {
-    const { errors } = usePage().props;
+    const { flash } = usePage().props;
 
     return (
         <AuthenticatedLayout>
@@ -13,6 +14,7 @@ export default function Content({ title, className = '', children }) {
                 <div className="flex flex-1 w-full max-w-7xl h-full sm:px-6 lg:px-8">
                     <div className={"flex-1 bg-white overflow-hidden shadow-sm sm:rounded-lg " + className}>
                         <div className="relative min-h-full p-6 text-gray-900">
+                            {flash.success && <FlashMessage>{flash.success}</FlashMessage>}
                             {children}
                         </div>
                     </div>
