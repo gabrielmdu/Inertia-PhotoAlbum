@@ -176,7 +176,7 @@ class AlbumsRouteTest extends TestCase
 
         Event::assertDispatched(AlbumUpdated::class);
 
-        $response->assertRedirect(route('albums.index'));
+        $response->assertRedirect(route('albums.show', ['album' => $album->id]));
 
         $album->refresh();
 
