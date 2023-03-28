@@ -45,9 +45,11 @@ class AlbumsController extends Controller
 
         $user = $request->user();
 
-        $user->albums()->create(array_merge(['user_id' => $user->id], $data));
+        $album = new Album($data);
+        $album->user_id = $user->id;
+        $album->save();
 
-        return redirect(route('albums.index'))->with('success', 'Album created');
+        return redirect(route('albums.show', ['album' => $album]))->with('success', 'Album created');
     }
 
     public function edit(Request $request, Album $album)
@@ -65,7 +67,7 @@ class AlbumsController extends Controller
 
         $album->update($data);
 
-        return redirect(route('albums.index'))->with('success', 'Album updated');
+        return redirect(route('albums.show', ['album' => $album]))->with('success', 'Album updated');
     }
 
     public function destroy(Request $request, Album $album)
