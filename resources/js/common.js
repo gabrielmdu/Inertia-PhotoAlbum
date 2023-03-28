@@ -7,7 +7,21 @@ export const BUTTON_TYPE = {
     INFO: 'info'
 };
 
+export const PICSUM_URL = 'https://picsum.photos/id/';
+
 // ----- functions
+
+/**
+ * 
+ * @param {int} id The photo id
+ * @param {int} width 
+ * @param {int|null} height 
+ * @returns URL to Picsum photo
+ */
+export const getPicsumPhoto = (id, width, height) => {
+    height = height ?? width;
+    return `${PICSUM_URL}${id}/${width}/${height}`;
+};
 
 /**
  * 

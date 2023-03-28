@@ -1,3 +1,4 @@
+import { getPicsumPhoto } from "@/common";
 import { Link } from "@inertiajs/react";
 import React from "react";
 
@@ -6,7 +7,7 @@ export default function Album({ album }) {
     const descriptionShort = album.description.length <= maxDescriptionChars
         ? album.description
         : (album.description.slice(0, maxDescriptionChars) + '...');
-    const bgUrl = `https://picsum.photos/id/${album.cover_id}/300`;
+    const bgUrl = getPicsumPhoto(album.cover_id, 300);
 
     return (
         <Link

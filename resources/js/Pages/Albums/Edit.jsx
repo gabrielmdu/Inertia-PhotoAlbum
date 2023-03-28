@@ -9,7 +9,7 @@ import TextArea from "@/Components/TextArea";
 import PicturesModal from "@/Components/PicturesModal";
 import ConfirmModal from "@/Components/ConfirmModal";
 import Button from "@/Components/Button/Button";
-import { BUTTON_TYPE } from "@/common";
+import { BUTTON_TYPE, getPicsumPhoto } from "@/common";
 import { IconClick } from "@tabler/icons-react";
 
 export default function EditAlbum({ album }) {
@@ -145,7 +145,7 @@ export default function EditAlbum({ album }) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center sm:justify-evenly sm:items-start mt-1 w-full p-3 border rounded border-gray-300 bg-gradient-to-t from-gray-100 to-indigo-50">
-                    <img src={`https://picsum.photos/id/${data.cover_id}/400/300`} alt="" />
+                    <img src={getPicsumPhoto(data.cover_id, 400, 300)} alt="Album cover" />
                     <Button colorType={BUTTON_TYPE.INFO}
                         className='mt-2 sm:mt-0 whitespace-nowrap'
                         onClick={openPhotosModal}

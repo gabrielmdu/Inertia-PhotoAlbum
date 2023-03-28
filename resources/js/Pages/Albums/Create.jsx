@@ -7,6 +7,7 @@ import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
 import PicturesModal from "@/Components/PicturesModal";
+import { getPicsumPhoto } from "@/common";
 
 export default function CreateAlbum(props) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -131,7 +132,7 @@ export default function CreateAlbum(props) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center sm:justify-evenly sm:items-end mt-1 w-full max-w-xl p-3 border rounded border-gray-300 bg-gradient-to-t from-gray-100 to-indigo-50">
-                    {data.cover_id && <img src={`https://picsum.photos/id/${data.cover_id}/400/300`} alt="" />}
+                    {data.cover_id && <img src={getPicsumPhoto(data.cover_id, 400, 300)} alt="Album cover" />}
 
                     <button
                         type="button"

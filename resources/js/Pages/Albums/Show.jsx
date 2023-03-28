@@ -2,6 +2,7 @@ import React from "react"
 import ContentLayout from '@/Layouts/ContentLayout'
 import { IconEdit } from "@tabler/icons-react";
 import { Link } from "@inertiajs/react";
+import { getPicsumPhoto } from "@/common";
 
 const ShowAlbum = ({ album }) => {
     return (
@@ -18,7 +19,7 @@ const ShowAlbum = ({ album }) => {
 
                 <div className="flex justify-center w-full sm:w-72 h-60 sm:h-72">
                     <div className="rounded-full overflow-hidden border-4 border-zinc-200 w-60 sm:w-full h-full">
-                        <img src={`https://picsum.photos/id/${album.data.cover_id}/300`} alt="Album cover" />
+                        <img src={getPicsumPhoto(album.data.cover_id, 300)} alt="Album cover" />
                     </div>
                 </div>
 
