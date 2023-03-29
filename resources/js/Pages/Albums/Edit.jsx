@@ -6,7 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { router, useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
-import PicturesModal from "@/Components/PicturesModal";
+import PhotosModal from "@/Components/PhotosModal";
 import ConfirmModal from "@/Components/ConfirmModal";
 import Button from "@/Components/Button/Button";
 import { BUTTON_TYPE, getPicsumPhoto } from "@/common";
@@ -76,7 +76,7 @@ export default function EditAlbum({ album }) {
                 Editing album - {album.data.name}
             </div>
 
-            <PicturesModal
+            <PhotosModal
                 show={modalIsOpen}
                 onClose={closePhotosModal}
                 pictures={pictures}

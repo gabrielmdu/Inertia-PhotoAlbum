@@ -6,7 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
-import PicturesModal from "@/Components/PicturesModal";
+import PhotosModal from "@/Components/PhotosModal";
 import { getPicsumPhoto } from "@/common";
 
 export default function CreateAlbum(props) {
@@ -72,7 +72,7 @@ export default function CreateAlbum(props) {
                 Creating Album
             </div>
 
-            <PicturesModal
+            <PhotosModal
                 show={modalIsOpen}
                 onClose={closePhotosModal}
                 pictures={pictures}

@@ -1,8 +1,15 @@
 import { getPicsumPhoto } from "@/common";
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Modal from "./Modal";
 
-const PicturesModal = ({ pictures, onPictureClick, onPicturesScroll, ...props }) => {
+const PhotosModal = ({ pictures, onPictureClick, onPicturesScroll, ...props }) => {
+    const photosDiv = useCallback(scrollDiv => {
+        if (scrollDiv !== null) {
+            scrollDiv.dispatchEvent(new Event('scroll'));
+        }
+    }, []);
+
+
     return (
         <Modal {...props}>
             <div className="flex flex-col px-3 py-4 h-[32rem]">
@@ -14,6 +21,7 @@ const PicturesModal = ({ pictures, onPictureClick, onPicturesScroll, ...props })
                     id="scroll-pictures"
                     className="flex-1 border border-blue-100 overflow-y-auto grid grid-cols-3 gap-2"
                     onScroll={onPicturesScroll}
+                    ref={photosDiv}
                 >
                     {pictures.map(picId =>
                         <div key={picId} className='relative group cursor-pointer' onClick={() => onPictureClick(picId)}>
@@ -27,4 +35,4 @@ const PicturesModal = ({ pictures, onPictureClick, onPicturesScroll, ...props })
     );
 };
 
-export default PicturesModal;
+export default PhotosModal;
