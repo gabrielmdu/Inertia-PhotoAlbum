@@ -1,14 +1,31 @@
 import { getPicsumPhoto } from "@/common";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "./Modal";
 
-const PhotosModal = ({ pictures, onPictureClick, onPicturesScroll, ...props }) => {
+const PhotosModal = ({ pictures, onPictureClick, onDivScrolled, scrollTolerance = 100, ...props }) => {
+    const [canAddPhotos, setCanAddPhotos] = useState(true);
+
+    useEffect(() => {
+        if (!canAddPhotos) {
+            setTimeout(() => setCanAddPhotos(true), 300);
+        }
+    }, [canAddPhotos]);
+
     const photosDiv = useCallback(scrollDiv => {
         if (scrollDiv !== null) {
             scrollDiv.dispatchEvent(new Event('scroll'));
         }
     }, []);
 
+    const onHandleScroll = e => {
+        const bottom = (e.target.scrollHeight - e.target.scrollTop) <= (e.target.clientHeight + scrollTolerance);
+        if (bottom && canAddPhotos) {
+            if (typeof onDivScrolled === 'function') {
+                onDivScrolled();
+                setCanAddPhotos(false);
+            }
+        }
+    };
 
     return (
         <Modal {...props}>
@@ -20,7 +37,7 @@ const PhotosModal = ({ pictures, onPictureClick, onPicturesScroll, ...props }) =
                 <div
                     id="scroll-pictures"
                     className="flex-1 border border-blue-100 overflow-y-auto grid grid-cols-3 gap-2"
-                    onScroll={onPicturesScroll}
+                    onScroll={onHandleScroll}
                     ref={photosDiv}
                 >
                     {pictures.map(picId =>

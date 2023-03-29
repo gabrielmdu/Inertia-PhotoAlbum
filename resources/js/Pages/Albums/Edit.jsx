@@ -23,7 +23,7 @@ export default function EditAlbum({ album }) {
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
     const maxPicId = 1000;
-    const picsPerScroll = 12;
+    const picsPerScroll = 6;
     const firstPictures = Array.from({ length: picsPerScroll }, (_, i) => i + 1);
     const [pictures, setPictures] = useState(firstPictures);
 
@@ -63,13 +63,6 @@ export default function EditAlbum({ album }) {
         }
     };
 
-    const onHandleScroll = e => {
-        const bottom = (e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
-        if (bottom) {
-            addPictures();
-        }
-    };
-
     return (
         <ContentLayout title={'Album - ' + album.data.name}>
             <div className='p-3 text-3xl bg-gradient-to-r from-purple-600 to-indigo-900 rounded text-gray-100 font-mono'>
@@ -81,7 +74,7 @@ export default function EditAlbum({ album }) {
                 onClose={closePhotosModal}
                 pictures={pictures}
                 onPictureClick={onHandlePictureClick}
-                onPicturesScroll={onHandleScroll}
+                onDivScrolled={() => addPictures()}
             />
 
             <ConfirmModal

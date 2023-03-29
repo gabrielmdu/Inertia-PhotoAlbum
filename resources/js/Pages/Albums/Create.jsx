@@ -19,7 +19,7 @@ export default function CreateAlbum(props) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const maxPicId = 1000;
-    const picsPerScroll = 12;
+    const picsPerScroll = 6;
     const firstPictures = Array.from({ length: picsPerScroll }, (_, i) => i + 1);
     const [pictures, setPictures] = useState(firstPictures);
 
@@ -56,13 +56,7 @@ export default function CreateAlbum(props) {
         if (lastPicId < maxPicId - picsPerScroll) {
             const newIds = Array.from({ length: picsPerScroll }, (_, i) => i + 1 + lastPicId);
             setPictures([...pictures, ...newIds]);
-        }
-    };
-
-    const onHandleScroll = e => {
-        const bottom = (e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
-        if (bottom) {
-            addPictures();
+            console.log('pictures added');
         }
     };
 
@@ -77,7 +71,7 @@ export default function CreateAlbum(props) {
                 onClose={closePhotosModal}
                 pictures={pictures}
                 onPictureClick={onHandlePictureClick}
-                onPicturesScroll={onHandleScroll}
+                onDivScrolled={() => addPictures()}
             />
 
             <form className="mt-10" onSubmit={submit}>
