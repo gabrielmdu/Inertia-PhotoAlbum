@@ -21,6 +21,7 @@ class AlbumResource extends JsonResource
             'cover_id' => $this->cover_id,
             'created_at' => $this->created_at->getTimestampMs(),
             'updated_at' => $this->updated_at->getTimestampMs(),
+            'photos_count' => $this->whenCounted('photos'),
         ];
     }
 }

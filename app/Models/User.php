@@ -62,6 +62,7 @@ class User extends Authenticatable
             ->albums()
             ->filter($filters)
             ->orderBy('id', 'DESC')
+            ->withCount('photos')
             ->paginate($perPage);
     }
 }
