@@ -10,18 +10,13 @@ import PhotosModal from "@/Components/PhotosModal";
 import { getPicsumPhoto } from "@/common";
 
 export default function CreateAlbum(props) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: '',
         description: '',
         cover_id: ''
     });
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
-
-    const maxPicId = 1000;
-    const picsPerScroll = 6;
-    const firstPictures = Array.from({ length: picsPerScroll }, (_, i) => i + 1);
-    const [pictures, setPictures] = useState(firstPictures);
 
     const onHandlePictureClick = (id) => {
         setModalIsOpen(false);
@@ -30,15 +25,7 @@ export default function CreateAlbum(props) {
 
     const openPhotosModal = (e) => {
         e.preventDefault();
-
-        setPictures(firstPictures);
         setModalIsOpen(true);
-    };
-
-    const closePhotosModal = () => {
-        setModalIsOpen(false);
-
-        reset();
     };
 
     const onHandleChange = (event) => {
@@ -51,15 +38,6 @@ export default function CreateAlbum(props) {
         post(route('albums.store'));
     };
 
-    const addPictures = () => {
-        const lastPicId = pictures.slice(-1)[0];
-        if (lastPicId < maxPicId - picsPerScroll) {
-            const newIds = Array.from({ length: picsPerScroll }, (_, i) => i + 1 + lastPicId);
-            setPictures([...pictures, ...newIds]);
-            console.log('pictures added');
-        }
-    };
-
     return (
         <ContentLayout title={'Creating Album'}>
             <div className='p-3 text-3xl bg-gradient-to-r from-purple-600 to-indigo-900 rounded text-gray-100 font-mono'>
@@ -68,10 +46,8 @@ export default function CreateAlbum(props) {
 
             <PhotosModal
                 show={modalIsOpen}
-                onClose={closePhotosModal}
-                pictures={pictures}
+                onClose={() => setModalIsOpen(false)}
                 onPictureClick={onHandlePictureClick}
-                onDivScrolled={() => addPictures()}
             />
 
             <form className="mt-10" onSubmit={submit}>
@@ -118,7 +94,7 @@ export default function CreateAlbum(props) {
                         onChange={onHandleChange}
                         type='number'
                         min={1}
-                        max={maxPicId}
+                        max={1000}
                         required
                     />
 

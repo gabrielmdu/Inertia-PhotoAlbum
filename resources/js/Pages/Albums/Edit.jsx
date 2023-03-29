@@ -13,7 +13,7 @@ import { BUTTON_TYPE, getPicsumPhoto } from "@/common";
 import { IconClick } from "@tabler/icons-react";
 
 export default function EditAlbum({ album }) {
-    const { data, setData, put, processing, errors, reset } = useForm({
+    const { data, setData, put, processing, errors } = useForm({
         name: album.data.name,
         description: album.data.description,
         cover_id: album.data.cover_id
@@ -22,11 +22,6 @@ export default function EditAlbum({ album }) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-    const maxPicId = 1000;
-    const picsPerScroll = 6;
-    const firstPictures = Array.from({ length: picsPerScroll }, (_, i) => i + 1);
-    const [pictures, setPictures] = useState(firstPictures);
-
     const onHandlePictureClick = (id) => {
         setModalIsOpen(false);
         setData({ ...data, cover_id: id });
@@ -34,15 +29,7 @@ export default function EditAlbum({ album }) {
 
     const openPhotosModal = (e) => {
         e.preventDefault();
-
-        setPictures(firstPictures);
         setModalIsOpen(true);
-    };
-
-    const closePhotosModal = () => {
-        setModalIsOpen(false);
-
-        reset();
     };
 
     const onHandleChange = (event) => {
@@ -55,14 +42,6 @@ export default function EditAlbum({ album }) {
         put(route('albums.update', { album: album.data.id }));
     };
 
-    const addPictures = () => {
-        const lastPicId = pictures.slice(-1)[0];
-        if (lastPicId < maxPicId - picsPerScroll) {
-            const newIds = Array.from({ length: picsPerScroll }, (_, i) => i + 1 + lastPicId);
-            setPictures([...pictures, ...newIds]);
-        }
-    };
-
     return (
         <ContentLayout title={'Album - ' + album.data.name}>
             <div className='p-3 text-3xl bg-gradient-to-r from-purple-600 to-indigo-900 rounded text-gray-100 font-mono'>
@@ -71,10 +50,8 @@ export default function EditAlbum({ album }) {
 
             <PhotosModal
                 show={modalIsOpen}
-                onClose={closePhotosModal}
-                pictures={pictures}
+                onClose={() => setModalIsOpen(false)}
                 onPictureClick={onHandlePictureClick}
-                onDivScrolled={() => addPictures()}
             />
 
             <ConfirmModal
@@ -130,7 +107,7 @@ export default function EditAlbum({ album }) {
                         onChange={onHandleChange}
                         type='number'
                         min={1}
-                        max={maxPicId}
+                        max={1000}
                         required
                     />
 

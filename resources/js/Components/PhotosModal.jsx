@@ -2,7 +2,12 @@ import { getPicsumPhoto } from "@/common";
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "./Modal";
 
-const PhotosModal = ({ pictures, onPictureClick, onDivScrolled, scrollTolerance = 100, ...props }) => {
+const PhotosModal = ({ onPictureClick, scrollTolerance = 100, ...props }) => {
+    const maxPicId = 1000;
+    const picsPerScroll = 6;
+    const firstPictures = Array.from({ length: picsPerScroll }, (_, i) => i + 1);
+
+    const [pictures, setPictures] = useState(firstPictures);
     const [canAddPhotos, setCanAddPhotos] = useState(true);
 
     useEffect(() => {
@@ -20,15 +25,21 @@ const PhotosModal = ({ pictures, onPictureClick, onDivScrolled, scrollTolerance 
     const onHandleScroll = e => {
         const bottom = (e.target.scrollHeight - e.target.scrollTop) <= (e.target.clientHeight + scrollTolerance);
         if (bottom && canAddPhotos) {
-            if (typeof onDivScrolled === 'function') {
-                onDivScrolled();
-                setCanAddPhotos(false);
-            }
+            addPictures();
+            setCanAddPhotos(false);
+        }
+    };
+
+    const addPictures = () => {
+        const lastPicId = pictures.slice(-1)[0];
+        if (lastPicId < maxPicId - picsPerScroll) {
+            const newIds = Array.from({ length: picsPerScroll }, (_, i) => i + 1 + lastPicId);
+            setPictures([...pictures, ...newIds]);
         }
     };
 
     return (
-        <Modal {...props}>
+        <Modal {...props} afterLeave={() => setPictures(firstPictures)}>
             <div className="flex flex-col px-3 py-4 h-[32rem]">
                 <div className="mb-2 px-2 py-2 rounded bg-lime-500 text-gray-700 shadow-inner">
                     Select a picture
