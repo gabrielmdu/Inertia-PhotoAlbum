@@ -8,6 +8,7 @@ import { useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
 import PhotosModal from "@/Components/PhotosModal";
 import { getPicsumPhoto } from "@/common";
+import ContentHeader from "@/Components/ContentHeader";
 
 export default function CreateAlbum(props) {
     const { data, setData, post, processing, errors } = useForm({
@@ -40,9 +41,7 @@ export default function CreateAlbum(props) {
 
     return (
         <ContentLayout title={'Creating Album'}>
-            <div className='p-3 text-3xl bg-gradient-to-r from-purple-600 to-indigo-900 rounded text-gray-100 font-mono'>
-                Creating Album
-            </div>
+            <ContentHeader>Creating Album</ContentHeader>
 
             <PhotosModal
                 show={modalIsOpen}

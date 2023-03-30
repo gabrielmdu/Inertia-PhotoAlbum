@@ -14,6 +14,9 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            skew: {
+                '35': '35deg',
+            }
         },
     },
 

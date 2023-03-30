@@ -11,6 +11,7 @@ import ConfirmModal from "@/Components/ConfirmModal";
 import Button from "@/Components/Button/Button";
 import { BUTTON_TYPE, getPicsumPhoto } from "@/common";
 import { IconClick } from "@tabler/icons-react";
+import ContentHeader from "@/Components/ContentHeader";
 
 export default function EditAlbum({ album }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -44,9 +45,7 @@ export default function EditAlbum({ album }) {
 
     return (
         <ContentLayout title={'Album - ' + album.data.name}>
-            <div className='p-3 text-3xl bg-gradient-to-r from-purple-600 to-indigo-900 rounded text-gray-100 font-mono'>
-                Editing album - {album.data.name}
-            </div>
+            <ContentHeader>Editing album - {album.data.name}</ContentHeader>
 
             <PhotosModal
                 show={modalIsOpen}

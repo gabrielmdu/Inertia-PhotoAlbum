@@ -7,6 +7,7 @@ import { router, usePage } from '@inertiajs/react';
 import NoResults from '@/Components/NoResults';
 import { IconAlbum, IconAlbumOff } from '@tabler/icons-react';
 import CreateButton from '@/Components/CreateButton';
+import ContentHeader from '@/Components/ContentHeader';
 
 export default function AlbumsIndex({ albums }) {
     const { filters } = usePage().props;
@@ -19,7 +20,7 @@ export default function AlbumsIndex({ albums }) {
 
     return (
         <ContentLayout title='Albums'>
-            <div className='p-3 text-3xl bg-gradient-to-r from-cyan-500 to-blue-500 rounded text-gray-100 font-mono'>My Albums</div>
+            <ContentHeader>My Albums</ContentHeader>
 
             <div className='flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 my-6'>
                 <SearchText className="max-w-full sm:max-w-sm" text={filters.search || ''} searchCallback={searchCallback} callbackTriggerTime={250} />
