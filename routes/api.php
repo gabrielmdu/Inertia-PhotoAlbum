@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AlbumsController;
+use App\Http\Controllers\API\PhotosController;
 use App\Http\Controllers\API\TokensController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,9 @@ Route::name('api.')->group(function () {
 
         Route::resource('albums', AlbumsController::class)
             ->except(['create', 'edit']);
+
+        Route::resource('photos', PhotosController::class)
+            ->only(['index']);
     });
 
     Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');
