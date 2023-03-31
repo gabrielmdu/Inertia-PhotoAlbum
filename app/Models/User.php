@@ -65,4 +65,14 @@ class User extends Authenticatable
             ->withCount('photos')
             ->paginate($perPage);
     }
+
+    public function getLatestPhotosPaginated(int $perPage = 4, int $albumId = null)
+    {
+        return $this
+            ->photos()
+            ->byAlbum($albumId)
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->simplePaginate($perPage);
+    }
 }
