@@ -1,11 +1,52 @@
-import React from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import ContentLayout from '@/Layouts/ContentLayout'
-import { IconEdit } from "@tabler/icons-react";
+import { IconEdit, IconLoader2 } from "@tabler/icons-react";
 import { Link } from "@inertiajs/react";
 import { getPicsumPhoto } from "@/common";
 import ReactTimeAgo from "react-time-ago";
+import { usePaginatedResults } from "@/Hooks/usePaginatedResults";
 
 const ShowAlbum = ({ album }) => {
+    const refObserved = useRef();
+    const refObserver = useRef();
+
+    const [photos, setPhotos] = useState([]);
+
+    const url = route('api.photos.index', { album_id: album.data.id });
+    const { setCurrPage, isLoading } = usePaginatedResults(url, handleOnResult);
+
+    useEffect(() => {
+        refObserver.current = new IntersectionObserver(handleObserved);
+    }, [refObserved]);
+
+    useEffect(() => {
+        refObserver.current.observe(refObserved.current);
+
+        return () => {
+            refObserver.current.disconnect();
+        };
+    }, [refObserved]);
+
+    function handleOnResult(data) {
+        console.log('photos loaded');
+        setPhotos([...photos, ...data.data]);
+        console.log(data);
+        if (data.links.next) {
+            refObserver.current.observe(refObserved.current);
+        }
+    }
+
+    const handleObserved = useCallback((entries) => {
+        entries.forEach(
+            e => {
+                if (e.isIntersecting) {
+                    refObserver.current.unobserve(e.target);
+                    setCurrPage(prevPage => prevPage + 1);
+                }
+            }
+        );
+    }, []);
+
     return (
         <ContentLayout
             title={'Album ' + album.data.name}
@@ -35,6 +76,21 @@ const ShowAlbum = ({ album }) => {
                         <span> (Updated <ReactTimeAgo date={album.data.updated_at} />) </span>}
                 </div>
             </div>
+            <div className="grid grid-cols-4 gap-2 mt-6 lazy">
+                {photos.map(photo =>
+                    <div key={photo.id} className='min-w-full min-h-full bg-lime-300'>
+                        <img src={getPicsumPhoto(photo.api_id, 300)} alt="" />
+                    </div>)
+                }
+            </div>
+
+            {isLoading &&
+                <div className="flex items-center justify-center p-4 w-full text-white animate-spin">
+                    <IconLoader2 size={28} />
+                </div>
+            }
+
+            <div ref={refObserved} className=""></div>
         </ContentLayout>
     );
 };
