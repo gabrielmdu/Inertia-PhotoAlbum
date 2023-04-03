@@ -6,6 +6,7 @@ import { getPicsumPhoto } from "@/common";
 import ReactTimeAgo from "react-time-ago";
 import { usePaginatedResults } from "@/Hooks/usePaginatedResults";
 import { useObserved } from "@/Hooks/useObserved";
+import Photo from "@/Components/Photo";
 
 const ShowAlbum = ({ album }) => {
     const refObserved = useRef();
@@ -62,12 +63,9 @@ const ShowAlbum = ({ album }) => {
             </div>
             <div className="grid grid-cols-4 gap-2 mt-6 lazy">
                 {photos.map(photo =>
-                    <div key={photo.id} className='min-w-full min-h-full bg-lime-300'>
-                        <img src={getPicsumPhoto(photo.api_id, 300)} alt="" />
-                    </div>)
+                    <Photo key={photo.id} photo={photo} />)
                 }
             </div>
-
 
             <div ref={refObserved} className="">
                 {isLoading &&
