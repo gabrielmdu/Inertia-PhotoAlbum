@@ -2,16 +2,28 @@ import { getPicsumPhoto } from '@/common';
 import { IconCameraOff } from '@tabler/icons-react';
 import React, { useRef, useState } from 'react';
 
-const Photo = ({ photo }) => {
+const Photo = ({ photo, onClick = () => { } }) => {
     const ref = useRef();
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
 
+    const handleOnClick = event => {
+        if (isLoading || hasError) {
+            return;
+        }
+
+        onClick(event);
+    };
+
     return (
         <div key={photo.id}
-            className={'flex justify-center items-center min-w-full min-h-full bg-gradient-to-b from-gray-200 to-gray-400 '
-                + (isLoading ? 'animate-pulse' : '')}
+            className={
+                'flex justify-center items-center overflow-hidden min-w-full min-h-full bg-gradient-to-b from-gray-200 to-gray-400 '
+                + (isLoading ? 'animate-pulse ' : '')
+                + (!hasError && !isLoading ? 'cursor-pointer ' : '')
+            }
             ref={ref}
+            onClick={handleOnClick}
         >
             {
                 !hasError
@@ -20,6 +32,7 @@ const Photo = ({ photo }) => {
                         onError={() => { setHasError(true); setIsLoading(false) }}
                         src={getPicsumPhoto(photo.api_id, 300)}
                         alt="Photo"
+                        className='hover:scale-125 transition-transform ease-in-out duration-300'
                     />
                     : <IconCameraOff
                         size={16}
