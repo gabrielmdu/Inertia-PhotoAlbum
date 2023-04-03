@@ -53,7 +53,7 @@ const ShowAlbum = ({ album }) => {
             className='bg-gradient-to-b from-violet-900 via-purple-900 to-zinc-900'
         >
             <div className="relative flex flex-col sm:flex-row border-b border-gray-500 pb-4">
-                <div className="absolute right-6 top-6 text-white">
+                <div className="absolute right-0 top-0 text-white">
                     <Link href={route('albums.edit', { album: album.data.id })} title="Edit album">
                         <IconEdit size={28} stroke={1} />
                     </Link>
