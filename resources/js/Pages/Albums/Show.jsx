@@ -7,7 +7,7 @@ import ReactTimeAgo from "react-time-ago";
 import { usePaginatedResults } from "@/Hooks/usePaginatedResults";
 import { useObserved } from "@/Hooks/useObserved";
 import Photo from "@/Components/Photo";
-import PhotoModal from "@/Components/PhotoModal";
+import PhotoModal from "@/Components/Modal/PhotoModal";
 
 const ShowAlbum = ({ album }) => {
     const refObserved = useRef();

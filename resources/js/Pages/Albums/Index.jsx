@@ -6,7 +6,7 @@ import SearchText from '@/Components/SearchText';
 import { router, usePage } from '@inertiajs/react';
 import NoResults from '@/Components/NoResults';
 import { IconAlbum, IconAlbumOff } from '@tabler/icons-react';
-import CreateButton from '@/Components/CreateButton';
+import CreateButton from '@/Components/Button/CreateButton';
 import ContentHeader from '@/Components/ContentHeader';
 
 export default function AlbumsIndex({ albums }) {

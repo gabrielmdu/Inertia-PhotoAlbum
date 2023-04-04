@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import ContentLayout from '@/Layouts/ContentLayout'
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
+import PrimaryButton from "@/Components/Button/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
-import PhotosModal from "@/Components/PhotosModal";
+import PickPhotosModal from "@/Components/Modal/PickPhotosModal";
 import { getPicsumPhoto } from "@/common";
 import ContentHeader from "@/Components/ContentHeader";
 
@@ -43,7 +43,7 @@ export default function CreateAlbum(props) {
         <ContentLayout title={'Creating Album'}>
             <ContentHeader>Creating Album</ContentHeader>
 
-            <PhotosModal
+            <PickPhotosModal
                 show={modalIsOpen}
                 onClose={() => setModalIsOpen(false)}
                 onPictureClick={onHandlePictureClick}

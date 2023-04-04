@@ -1,7 +1,7 @@
 import { BUTTON_TYPE } from "@/common";
 import { IconAlertCircle } from "@tabler/icons-react";
 import React from "react";
-import Button from "./Button/Button";
+import Button from "../Button/Button";
 import Modal from "./Modal";
 
 const ConfirmModal = ({ onConfirm, onCancel, className = '', children, ...props }) => {

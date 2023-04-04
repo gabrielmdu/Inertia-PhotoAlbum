@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import ContentLayout from '@/Layouts/ContentLayout'
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
+import PrimaryButton from "@/Components/Button/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { router, useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
-import PhotosModal from "@/Components/PhotosModal";
-import ConfirmModal from "@/Components/ConfirmModal";
+import PickPhotosModal from "@/Components/Modal/PickPhotosModal";
+import ConfirmModal from "@/Components/Modal/ConfirmModal";
 import Button from "@/Components/Button/Button";
 import { BUTTON_TYPE, getPicsumPhoto } from "@/common";
 import { IconClick } from "@tabler/icons-react";
@@ -47,7 +47,7 @@ export default function EditAlbum({ album }) {
         <ContentLayout title={'Album - ' + album.data.name}>
             <ContentHeader>Editing album - {album.data.name}</ContentHeader>
 
-            <PhotosModal
+            <PickPhotosModal
                 show={modalIsOpen}
                 onClose={() => setModalIsOpen(false)}
                 onPictureClick={onHandlePictureClick}

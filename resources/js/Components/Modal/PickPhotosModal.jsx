@@ -2,7 +2,7 @@ import { getPicsumPhoto } from "@/common";
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "./Modal";
 
-const PhotosModal = ({ onPictureClick, scrollTolerance = 100, ...props }) => {
+const PickPhotosModal = ({ onPictureClick, scrollTolerance = 100, ...props }) => {
     const maxPicId = 1000;
     const picsPerScroll = 6;
     const firstPictures = Array.from({ length: picsPerScroll }, (_, i) => i + 1);
@@ -63,4 +63,4 @@ const PhotosModal = ({ onPictureClick, scrollTolerance = 100, ...props }) => {
     );
 };
 
-export default PhotosModal;
+export default PickPhotosModal;
