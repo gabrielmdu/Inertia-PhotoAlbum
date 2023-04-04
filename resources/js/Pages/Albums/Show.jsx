@@ -7,6 +7,7 @@ import ReactTimeAgo from "react-time-ago";
 import { usePaginatedResults } from "@/Hooks/usePaginatedResults";
 import { useObserved } from "@/Hooks/useObserved";
 import Photo from "@/Components/Photo";
+import PhotoModal from "@/Components/PhotoModal";
 
 const ShowAlbum = ({ album }) => {
     const refObserved = useRef();
@@ -18,6 +19,9 @@ const ShowAlbum = ({ album }) => {
 
     const { isObserved, startObserving, stopObserving } = useObserved(refObserved);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currPhoto, setCurrPhoto] = useState(null);
+
     useEffect(() => {
         if (isObserved) {
             stopObserving();
@@ -27,6 +31,7 @@ const ShowAlbum = ({ album }) => {
 
     function handleOnResult(data) {
         setPhotos([...photos, ...data.data]);
+
         if (data.links.next) {
             startObserving();
         }
@@ -63,7 +68,7 @@ const ShowAlbum = ({ album }) => {
             </div>
             <div className="grid grid-cols-4 gap-2 mt-6 lazy">
                 {photos.map(photo =>
-                    <Photo key={photo.id} photo={photo} />)
+                    <Photo key={photo.id} photo={photo} onClick={() => { setIsModalOpen(true); setCurrPhoto(photo) }} />)
                 }
             </div>
 
@@ -74,6 +79,9 @@ const ShowAlbum = ({ album }) => {
                     </div>
                 }
             </div>
+            {currPhoto &&
+                <PhotoModal photo={currPhoto} show={isModalOpen} onClose={() => { setIsModalOpen(false); setCurrPhoto(null); }} />
+            }
         </ContentLayout>
     );
 };
