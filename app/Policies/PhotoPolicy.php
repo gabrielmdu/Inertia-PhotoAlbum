@@ -21,7 +21,7 @@ class PhotoPolicy
      */
     public function view(User $user, Photo $photo): bool
     {
-        //
+        return $user->id === $photo->album->user_id;
     }
 
     /**
@@ -29,7 +29,7 @@ class PhotoPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class PhotoPolicy
      */
     public function update(User $user, Photo $photo): bool
     {
-        //
+        return $user->id === $photo->album->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class PhotoPolicy
      */
     public function delete(User $user, Photo $photo): bool
     {
-        //
+        return $this->update($user, $photo);
     }
 
     /**
@@ -53,7 +53,7 @@ class PhotoPolicy
      */
     public function restore(User $user, Photo $photo): bool
     {
-        //
+        return $this->update($user, $photo);
     }
 
     /**
@@ -61,6 +61,6 @@ class PhotoPolicy
      */
     public function forceDelete(User $user, Photo $photo): bool
     {
-        //
+        return false;
     }
 }

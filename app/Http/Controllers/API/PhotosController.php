@@ -23,4 +23,11 @@ class PhotosController extends Controller
 
         return PhotoResource::collection($photos);
     }
+
+    public function show(Request $request, Photo $photo)
+    {
+        $this->authorize('view', $photo);
+
+        return new PhotoResource($photo);
+    }
 }

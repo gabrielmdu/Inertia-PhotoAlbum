@@ -20,6 +20,7 @@ class PhotoResource extends JsonResource
             'api_id' => $this->api_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'album' => $this->whenLoaded('album'),
         ];
     }
 }

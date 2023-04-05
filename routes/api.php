@@ -27,7 +27,7 @@ Route::name('api.')->group(function () {
             ->except(['create', 'edit']);
 
         Route::resource('photos', PhotosController::class)
-            ->only(['index']);
+            ->only(['index', 'show']);
     });
 
     Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');
