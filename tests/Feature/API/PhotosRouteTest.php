@@ -69,4 +69,68 @@ class PhotosRouteTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_can_update_owned_photo()
+    {
+        $album = Album::factory()
+            ->hasPhotos(1)
+            ->create(['user_id' => $this->user->id]);
+
+        $photo = $album->photos[0];
+
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'api_id' => 455,
+            'caption' => 'This is the new caption.',
+        ];
+
+        $response = $this->putJson(route('api.photos.update', ['photo' => $photo->id]), $photoData);
+
+        $response->assertOk();
+        
+        $photo->refresh();
+        $this->assertEquals($photoData, $photo->only(['api_id', 'caption']));
+    }
+
+    public function test_cant_update_photo_with_invalid_data()
+    {
+        $album = Album::factory()
+            ->hasPhotos(1)
+            ->create(['user_id' => $this->user->id]);
+
+        $photo = $album->photos[0];
+
+        Sanctum::actingAs($this->user);
+
+        $invalidPhotoData = [
+            'api_id' => 1001,
+            'caption' => str_repeat('a', 501),
+        ];
+
+        $response = $this->putJson(route('api.photos.update', ['photo' => $photo->id]), $invalidPhotoData);
+
+        $response->assertUnprocessable();
+
+        $response->assertJsonValidationErrors(['api_id', 'caption']);
+    }
+
+    public function test_cant_update_not_owned_photo()
+    {
+        $otherUser = User::factory()
+            ->has(Album::factory()
+                ->hasPhotos(1))
+            ->create();
+
+        $photo = $otherUser->albums[0]->photos[0];
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->putJson(route('api.photos.update', ['photo' => $photo->id]), [
+            'api_id' => 333,
+            'caption' => 'Asaçldkasçfjafjwiafnçaifhjçlsakhfsçlfhçskhfçds'
+        ]);
+
+        $response->assertForbidden();
+    }
 }

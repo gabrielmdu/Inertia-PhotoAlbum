@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePhotoRequest;
 use App\Http\Resources\PhotoResource;
 use App\Models\Photo;
 use Illuminate\Http\Request;
@@ -29,5 +30,12 @@ class PhotosController extends Controller
         $this->authorize('view', $photo);
 
         return new PhotoResource($photo);
+    }
+
+    public function update(UpdatePhotoRequest $request, Photo $photo)
+    {
+        $data = $request->validated();
+
+        $photo->update($data);
     }
 }
