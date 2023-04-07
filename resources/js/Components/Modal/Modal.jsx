@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
 export default function Modal({ children, show = false, maxWidth = '2xl', closeable = true, onClose = () => { }, afterLeave = () => { } }) {
@@ -16,9 +16,12 @@ export default function Modal({ children, show = false, maxWidth = '2xl', closea
         '2xl': 'sm:max-w-2xl',
     }[maxWidth];
 
+    let refDiv = useRef(null);
+
     return (
         <Transition show={show} as={Fragment} leave="duration-200" afterLeave={afterLeave}>
             <Dialog
+                initialFocus={refDiv}
                 as="div"
                 id="modal"
                 className="fixed inset-0 flex overflow-y-auto px-4 py-6 items-center z-50 transform transition-all"
@@ -48,7 +51,9 @@ export default function Modal({ children, show = false, maxWidth = '2xl', closea
                     <Dialog.Panel
                         className={`mb-6 mx-auto w-full bg-white rounded-lg overflow-hidden shadow-xl transform transition-all ${maxWidthClass}`}
                     >
-                        {children}
+                        <div ref={refDiv}>
+                            {children}
+                        </div>
                     </Dialog.Panel>
                 </Transition.Child>
             </Dialog>
