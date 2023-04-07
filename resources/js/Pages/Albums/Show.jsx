@@ -8,6 +8,7 @@ import { usePaginatedResults } from "@/Hooks/usePaginatedResults";
 import { useObserved } from "@/Hooks/useObserved";
 import Photo from "@/Components/Photo";
 import PhotoModal from "@/Components/Modal/PhotoModal";
+import axios from "axios";
 
 const ShowAlbum = ({ album }) => {
     const refObserved = useRef();
@@ -36,6 +37,16 @@ const ShowAlbum = ({ album }) => {
             startObserving();
         }
     }
+
+    const handleCloseModal = async () => {
+        const response = await axios.get(route('api.photos.show', { photo: currPhoto.id }));
+
+        const newPhotos = photos.map(p => p.id === currPhoto.id ? response.data.data : p);
+
+        setPhotos(newPhotos);
+        setIsModalOpen(false);
+        setCurrPhoto(null);
+    };
 
     return (
         <ContentLayout
@@ -68,7 +79,7 @@ const ShowAlbum = ({ album }) => {
             </div>
             <div className="grid grid-cols-4 gap-2 mt-6 lazy">
                 {photos.map(photo =>
-                    <Photo key={photo.id} photo={photo} onClick={() => { setIsModalOpen(true); setCurrPhoto(photo) }} />)
+                    <Photo key={photo.id} photo={photo} onClick={() => { setIsModalOpen(true); setCurrPhoto(photo); }} />)
                 }
             </div>
 
@@ -80,7 +91,7 @@ const ShowAlbum = ({ album }) => {
                 }
             </div>
             {currPhoto &&
-                <PhotoModal photo={currPhoto} show={isModalOpen} onClose={() => { setIsModalOpen(false); setCurrPhoto(null); }} />
+                <PhotoModal photo={currPhoto} show={isModalOpen} onClose={handleCloseModal} />
             }
         </ContentLayout>
     );
