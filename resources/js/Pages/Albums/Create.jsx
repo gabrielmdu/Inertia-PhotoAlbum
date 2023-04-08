@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import ContentLayout from '@/Layouts/ContentLayout'
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/Button/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
 import PickPhotosModal from "@/Components/Modal/PickPhotosModal";
 import { getPicsumPhoto } from "@/common";
 import ContentHeader from "@/Components/ContentHeader";
+import Button from "@/Components/Button/Button";
 
 export default function CreateAlbum(props) {
     const { data, setData, post, processing, errors } = useForm({
@@ -112,9 +112,9 @@ export default function CreateAlbum(props) {
                     </button>
                 </div>
 
-                <PrimaryButton className="mt-4" disabled={processing}>
+                <Button type='submit' className="mt-4" disabled={processing}>
                     Confirm
-                </PrimaryButton>
+                </Button>
             </form>
         </ContentLayout>
     );

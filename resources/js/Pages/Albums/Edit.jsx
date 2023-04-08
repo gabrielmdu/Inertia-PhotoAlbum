@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ContentLayout from '@/Layouts/ContentLayout'
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/Button/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { router, useForm } from "@inertiajs/react";
 import TextArea from "@/Components/TextArea";
@@ -131,9 +130,9 @@ export default function EditAlbum({ album }) {
                     >
                         Delete album
                     </button>
-                    <PrimaryButton disabled={processing}>
+                    <Button type='submit' disabled={processing}>
                         Update album
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </ContentLayout>
