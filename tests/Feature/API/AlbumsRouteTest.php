@@ -112,7 +112,7 @@ class AlbumsRouteTest extends TestCase
 
         Event::assertDispatched(AlbumStored::class);
 
-        $response->assertOk();
+        $response->assertCreated();
 
         $this->assertDatabaseHas('albums', $albumData);
     }

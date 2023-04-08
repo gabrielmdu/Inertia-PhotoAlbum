@@ -40,10 +40,12 @@ class AlbumsController extends Controller
     public function store(StoreAlbumRequest $request)
     {
         $data = $request->validated();
-        
+
         $user = $request->user();
 
         $user->albums()->create(array_merge(['user_id' => $user->id], $data));
+
+        return response()->noContent(Response::HTTP_CREATED);
     }
 
     public function destroy(Request $request, Album $album)
