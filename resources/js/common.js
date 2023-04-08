@@ -4,7 +4,8 @@ export const BUTTON_TYPE = {
     SUCCESS: 'success',
     ERROR: 'error',
     WARNING: 'warning',
-    INFO: 'info'
+    INFO: 'info',
+    NEUTRAL: 'neutral'
 };
 
 export const PICSUM_URL = 'https://picsum.photos/id/';
