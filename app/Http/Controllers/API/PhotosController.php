@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePhotoRequest;
 use App\Http\Requests\UpdatePhotoRequest;
 use App\Http\Resources\PhotoResource;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PhotosController extends Controller
 {
@@ -30,6 +32,15 @@ class PhotosController extends Controller
         $this->authorize('view', $photo);
 
         return new PhotoResource($photo);
+    }
+
+    public function store(StorePhotoRequest $request)
+    {
+        $data = $request->validated();
+
+        Photo::create($data);
+
+        return response()->noContent(Response::HTTP_CREATED);
     }
 
     public function update(UpdatePhotoRequest $request, Photo $photo)

@@ -14,6 +14,7 @@ class Photo extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'album_id',
         'caption',
         'api_id'
     ];

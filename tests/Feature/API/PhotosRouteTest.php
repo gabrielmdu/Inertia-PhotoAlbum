@@ -70,6 +70,43 @@ class PhotosRouteTest extends TestCase
         $response->assertForbidden();
     }
 
+    public function test_can_store_photo_in_owned_album()
+    {
+        $album = Album::factory()->create(['user_id' => $this->user->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'caption' => 'This is the caption of the new photo',
+            'api_id' => 200,
+            'album_id' => $album->id,
+        ];
+
+        $response = $this->postJson(route('api.photos.store'), $photoData);
+
+        $response->assertCreated();
+    }
+
+    public function test_cant_store_photo_in_not_owned_album()
+    {
+        $otherUser = User::factory()->create();
+        $album = Album::factory()->create(['user_id' => $otherUser->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'caption' => 'This is the caption of the new photo',
+            'api_id' => 200,
+            'album_id' => $album->id,
+        ];
+
+        $response = $this->postJson(route('api.photos.store'), $photoData);
+
+        $response->assertUnprocessable();
+
+        $response->assertJsonValidationErrors(['album_id']);
+    }
+
     public function test_can_update_owned_photo()
     {
         $album = Album::factory()
@@ -88,7 +125,7 @@ class PhotosRouteTest extends TestCase
         $response = $this->putJson(route('api.photos.update', ['photo' => $photo->id]), $photoData);
 
         $response->assertOk();
-        
+
         $photo->refresh();
         $this->assertEquals($photoData, $photo->only(['api_id', 'caption']));
     }
