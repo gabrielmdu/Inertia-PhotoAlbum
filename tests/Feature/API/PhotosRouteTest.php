@@ -107,6 +107,23 @@ class PhotosRouteTest extends TestCase
         $response->assertJsonValidationErrors(['album_id']);
     }
 
+    public function test_cant_store_photo_with_wrong_data()
+    {
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'caption' => str_repeat('0123456789', 50) . '1',
+            'api_id' => 1001,
+            'album_id' => 999,
+        ];
+
+        $response = $this->postJson(route('api.photos.store'), $photoData);
+
+        $response->assertUnprocessable();
+
+        $response->assertJsonValidationErrors(['caption', 'api_id', 'album_id']);
+    }
+
     public function test_can_update_owned_photo()
     {
         $album = Album::factory()
