@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import ContentLayout from '@/Layouts/ContentLayout'
-import { IconEdit, IconLoader2 } from "@tabler/icons-react";
+import { IconCamera, IconEdit, IconLoader2 } from "@tabler/icons-react";
 import { Link } from "@inertiajs/react";
 import { getPicsumPhoto } from "@/common";
 import ReactTimeAgo from "react-time-ago";
@@ -9,6 +9,7 @@ import { useObserved } from "@/Hooks/useObserved";
 import Photo from "@/Components/Photo";
 import PhotoModal from "@/Components/Modal/PhotoModal";
 import axios from "axios";
+import LinkButton from "@/Components/Button/LinkButton";
 
 const ShowAlbum = ({ album }) => {
     const refObserved = useRef();
@@ -77,6 +78,11 @@ const ShowAlbum = ({ album }) => {
                         <span> (Updated <ReactTimeAgo date={album.data.updated_at} />) </span>}
                 </div>
             </div>
+
+            <div className="flex justify-center sm:justify-end w-full mt-2">
+                <LinkButton className='flex items-end gap-1' href={route('albums.photos.create', { album: album.data.id })}><IconCamera stroke={1} /> Add Photo</LinkButton>
+            </div>
+
             <div className="grid grid-cols-4 gap-2 mt-6 lazy">
                 {photos.map(photo =>
                     <Photo key={photo.id} photo={photo} onClick={() => { setIsModalOpen(true); setCurrPhoto(photo); }} />)

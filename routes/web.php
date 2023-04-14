@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\AlbumsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PhotosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('/albums', AlbumsController::class);
+
+    Route::resource('albums.photos', PhotosController::class)
+        ->shallow()
+        ->only(['create', 'store']);
 });
 
 
