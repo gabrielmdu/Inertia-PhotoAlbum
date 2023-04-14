@@ -1,7 +1,7 @@
 import { BUTTON_TYPE } from "@/common";
 import React from "react";
 
-const Button = ({ colorType = BUTTON_TYPE.NEUTRAL, disabled, className = '', children, ...props }) => {
+const Button = ({ ComponentType = 'button', colorType = BUTTON_TYPE.NEUTRAL, disabled, className = '', children, ...props }) => {
     const color = {
         [BUTTON_TYPE.SUCCESS]: 'bg-green-600',
         [BUTTON_TYPE.ERROR]: 'bg-red-600',
@@ -11,7 +11,7 @@ const Button = ({ colorType = BUTTON_TYPE.NEUTRAL, disabled, className = '', chi
     }[colorType];
 
     return (
-        <button
+        <ComponentType
             type='button'
             {...props}
             className={
@@ -21,7 +21,7 @@ const Button = ({ colorType = BUTTON_TYPE.NEUTRAL, disabled, className = '', chi
             disabled={disabled}
         >
             {children}
-        </button>
+        </ComponentType>
     );
 };
 

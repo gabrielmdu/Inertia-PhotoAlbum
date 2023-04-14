@@ -6,8 +6,8 @@ import SearchText from '@/Components/SearchText';
 import { router, usePage } from '@inertiajs/react';
 import NoResults from '@/Components/NoResults';
 import { IconAlbum, IconAlbumOff } from '@tabler/icons-react';
-import CreateButton from '@/Components/Button/CreateButton';
 import ContentHeader from '@/Components/ContentHeader';
+import LinkButton from '@/Components/Button/LinkButton';
 
 export default function AlbumsIndex({ albums }) {
     const { filters } = usePage().props;
@@ -24,7 +24,7 @@ export default function AlbumsIndex({ albums }) {
 
             <div className='flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 my-6'>
                 <SearchText className="max-w-full sm:max-w-sm" text={filters.search || ''} searchCallback={searchCallback} callbackTriggerTime={250} />
-                <CreateButton className='flex items-center gap-1' href={route('albums.create')}><IconAlbum size={22} /> Create Album</CreateButton>
+                <LinkButton className='flex items-center gap-1' href={route('albums.create')}><IconAlbum size={22} /> Create Album</LinkButton>
             </div>
 
             {
