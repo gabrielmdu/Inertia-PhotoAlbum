@@ -40,4 +40,11 @@ class PhotosController extends Controller
 
         $photo->update($data);
     }
+
+    public function destroy(Request $request, Photo $photo)
+    {
+        $this->authorize('delete', $photo);
+
+        $photo->delete();
+    }
 }

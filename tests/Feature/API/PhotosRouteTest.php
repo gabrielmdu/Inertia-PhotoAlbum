@@ -132,4 +132,38 @@ class PhotosRouteTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_can_delete_owned_photo()
+    {
+        $album = Album::factory()
+            ->for($this->user)
+            ->hasPhotos(1)
+            ->create();
+
+        $photo = $album->photos()->first();
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->delete(route('api.photos.destroy', ['photo' => $photo->id]));
+
+        $response->assertOk();
+
+        $this->assertSoftDeleted($photo);
+    }
+
+    public function test_cant_delete_not_owned_photo()
+    {
+        $album = Album::factory()
+            ->for(User::factory()->create())
+            ->hasPhotos(1)
+            ->create();
+
+        $photo = $album->photos()->first();
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->delete(route('api.photos.destroy', ['photo' => $photo->id]));
+
+        $response->assertForbidden();
+    }
 }
