@@ -194,4 +194,57 @@ class AlbumsRouteTest extends TestCase
 
         $this->assertSoftDeleted($album);
     }
+
+    public function test_user_can_view_create_photo_page()
+    {
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
+
+        $response = $this->actingAs($this->user)
+            ->get(route('albums.photos.create', ['album' => $album->id]));
+
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
+                ->component('Photos/Create')
+        );
+    }
+
+    public function test_can_store_photo_in_owned_album()
+    {
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
+
+        $photoData = [
+            'caption' => 'This is the caption of the new photo',
+            'api_id' => 200,
+        ];
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('albums.photos.store', ['album' => $album->id]), $photoData);
+
+        $response->assertRedirect(route('albums.show', ['album' => $album->id]));
+
+        $this->assertDatabaseHas('photos', array_merge($photoData, ['album_id' => $album->id]));
+    }
+
+    public function test_user_cant_store_photo_in_not_owned_album()
+    {
+        $album = Album::factory()
+            ->for(User::factory()->create())
+            ->create();
+
+        $photoData = [
+            'caption' => 'This is the caption of the new photo',
+            'api_id' => 123,
+        ];
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('albums.photos.store', ['album' => $album->id]), $photoData);
+
+        $response->assertRedirect(route('dashboard'));
+
+        $this->assertDatabaseMissing('photos', array_merge($photoData, ['album_id' => $album->id]));
+    }
 }
