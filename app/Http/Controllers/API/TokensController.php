@@ -4,12 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Http\Response;
 use Laravel\Sanctum\NewAccessToken;
 
 class TokensController extends Controller
 {
-    public function create(LoginRequest $request)
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
@@ -21,6 +21,6 @@ class TokensController extends Controller
         return response([
             'token' => $token->plainTextToken,
             'expiration' => $token->accessToken->expires_at->timestamp
-        ], HttpResponse::HTTP_CREATED);
+        ], Response::HTTP_CREATED);
     }
 }

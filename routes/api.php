@@ -30,7 +30,7 @@ Route::name('api.')->group(function () {
             ->only(['index', 'show', 'store', 'update']);
     });
 
-    Route::post('/tokens/create', [TokensController::class, 'create'])->name('tokens.create');
+    Route::post('/tokens', [TokensController::class, 'store'])->name('tokens.store');
 
     // fallback route for any methods
     Route::any('{any}', fn () => response('', 404))

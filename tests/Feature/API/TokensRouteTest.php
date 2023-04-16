@@ -15,7 +15,7 @@ class TokensRouteTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->json('POST', route('api.tokens.create'), [
+        $response = $this->json('POST', route('api.tokens.store'), [
             'email' => $user->email,
             'password' => 'password'
         ]);
@@ -26,7 +26,7 @@ class TokensRouteTest extends TestCase
 
     public function test_cant_create_token_with_invalid_credentials()
     {
-        $response = $this->json('POST', route('api.tokens.create'), [
+        $response = $this->json('POST', route('api.tokens.store'), [
             'email' => 'email@email.com',
             'password' => 'password'
         ]);
