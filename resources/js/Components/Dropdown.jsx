@@ -84,8 +84,24 @@ const DropdownLink = ({ className = '', children, ...props }) => {
     );
 };
 
+const DropdownButton = ({ className = '', onClick = () => { }, children, ...props }) => {
+    return (
+        <button
+            onClick={onClick}
+            {...props}
+            className={
+                'block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out ' +
+                className
+            }
+        >
+            {children}
+        </button>
+    );
+};
+
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;
+Dropdown.Button = DropdownButton;
 
 export default Dropdown;
