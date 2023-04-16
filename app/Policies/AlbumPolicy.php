@@ -47,4 +47,19 @@ class AlbumPolicy
     {
         return $this->update($user, $album);
     }
+
+    public function viewPhotos(User $user, Album $album): bool
+    {
+        return $this->update($user, $album);
+    }
+
+    public function createPhoto(User $user, Album $album): bool
+    {
+        return $this->update($user, $album);
+    }
+
+    public function addPhoto(User $user, Album $album): bool
+    {
+        return $this->update($user, $album);
+    }
 }

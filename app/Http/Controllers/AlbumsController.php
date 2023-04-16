@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAlbumRequest;
+use App\Http\Requests\StorePhotoRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -77,5 +79,23 @@ class AlbumsController extends Controller
         $album->delete();
 
         return redirect(route('albums.index'))->with('success', 'Album deleted');
+    }
+
+    public function createPhoto(Request $request, Album $album)
+    {
+        $this->authorize('createPhoto', $album);
+
+        return Inertia::render('Photos/Create', [
+            'album' => new AlbumResource($album)
+        ]);
+    }
+
+    public function addPhoto(StorePhotoRequest $request, Album $album)
+    {
+        $data = $request->validated();
+
+        Photo::create(array_merge($data, ['album_id' => $album->id]));
+
+        return redirect(route('albums.show', ['album' => $album]))->with('success', 'Photo added');
     }
 }

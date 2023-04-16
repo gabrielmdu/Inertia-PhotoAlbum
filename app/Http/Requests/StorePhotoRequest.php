@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Photo;
-use Illuminate\Database\Query\Builder as Builder;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StorePhotoRequest extends FormRequest
 {
@@ -14,7 +11,9 @@ class StorePhotoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Photo::class);
+        $album = $this->route('album');
+
+        return $this->user()->can('addPhoto', $album);
     }
 
     /**
@@ -26,20 +25,7 @@ class StorePhotoRequest extends FormRequest
     {
         return [
             'api_id' => ['required', 'integer', 'between:1,1000'],
-            'album_id' => [
-                'required',
-                Rule::exists('albums', 'id')->where(
-                    fn (Builder $query) => $query->where('user_id', $this->user()->id)
-                )
-            ],
             'caption' => ['string', 'max:500'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'album_id.exists' => 'The selected album does not belong to the user.'
         ];
     }
 }

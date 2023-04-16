@@ -17,20 +17,19 @@ class PhotosRouteTest extends TestCase
 
     public function test_can_list_photos()
     {
-        $album = Album::factory()
-            ->hasPhotos(4)
-            ->create(['user_id' => $this->user->id]);
+        // two albums with two photos each
+        Album::factory(2)
+            ->for($this->user)
+            ->hasPhotos(2)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
-        $response = $this->get(route('api.photos.index', ['album_id' => $album->id]));
+        $response = $this->get(route('api.photos.index'));
 
         $response->assertOk();
-        $response->assertJsonStructure(['data', 'meta', 'links']);
-        $response->assertJsonCount(4, 'data');
 
-        $data = $response->json('data');
-        $this->assertDatabaseHas('photos', $data[0]);
+        $response->assertJsonCount(4, 'data');
     }
 
     public function test_can_view_photo()
@@ -68,60 +67,6 @@ class PhotosRouteTest extends TestCase
         $response = $this->get(route('api.photos.show', ['photo' => $photo->id]));
 
         $response->assertForbidden();
-    }
-
-    public function test_can_store_photo_in_owned_album()
-    {
-        $album = Album::factory()->create(['user_id' => $this->user->id]);
-
-        Sanctum::actingAs($this->user);
-
-        $photoData = [
-            'caption' => 'This is the caption of the new photo',
-            'api_id' => 200,
-            'album_id' => $album->id,
-        ];
-
-        $response = $this->postJson(route('api.photos.store'), $photoData);
-
-        $response->assertCreated();
-    }
-
-    public function test_cant_store_photo_in_not_owned_album()
-    {
-        $otherUser = User::factory()->create();
-        $album = Album::factory()->create(['user_id' => $otherUser->id]);
-
-        Sanctum::actingAs($this->user);
-
-        $photoData = [
-            'caption' => 'This is the caption of the new photo',
-            'api_id' => 200,
-            'album_id' => $album->id,
-        ];
-
-        $response = $this->postJson(route('api.photos.store'), $photoData);
-
-        $response->assertUnprocessable();
-
-        $response->assertJsonValidationErrors(['album_id']);
-    }
-
-    public function test_cant_store_photo_with_wrong_data()
-    {
-        Sanctum::actingAs($this->user);
-
-        $photoData = [
-            'caption' => str_repeat('0123456789', 50) . '1',
-            'api_id' => 1001,
-            'album_id' => 999,
-        ];
-
-        $response = $this->postJson(route('api.photos.store'), $photoData);
-
-        $response->assertUnprocessable();
-
-        $response->assertJsonValidationErrors(['caption', 'api_id', 'album_id']);
     }
 
     public function test_can_update_owned_photo()

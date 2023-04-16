@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AlbumPhotosController;
 use App\Http\Controllers\API\AlbumsController;
 use App\Http\Controllers\API\PhotosController;
 use App\Http\Controllers\API\TokensController;
@@ -23,11 +24,16 @@ Route::name('api.')->group(function () {
             return $request->user();
         })->name('user');
 
-        Route::resource('albums', AlbumsController::class)
-            ->except(['create', 'edit']);
+        // ----- albums
 
-        Route::resource('photos', PhotosController::class)
-            ->only(['index', 'show', 'store', 'update']);
+        Route::apiResource('albums', AlbumsController::class);
+        Route::get('albums/{album}/photos', [AlbumsController::class, 'photos'])->name('albums.photos.index');
+        Route::post('albums/{album}/photos', [AlbumsController::class, 'addPhoto'])->name('albums.photos.store');
+
+        // ----- photos
+
+        Route::apiResource('photos', PhotosController::class)
+            ->except(['store']);
     });
 
     Route::post('/tokens', [TokensController::class, 'store'])->name('tokens.store');

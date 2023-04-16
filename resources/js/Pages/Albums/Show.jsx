@@ -16,7 +16,7 @@ const ShowAlbum = ({ album }) => {
 
     const [photos, setPhotos] = useState([]);
 
-    const url = route('api.photos.index', { album_id: album.data.id });
+    const url = route('api.albums.photos.index', { album: album.data.id });
     const { setCurrPage, isLoading } = usePaginatedResults(url, handleOnResult);
 
     const { isObserved, startObserving, stopObserving } = useObserved(refObserved);

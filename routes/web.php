@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AlbumsController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PhotosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -32,10 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('/albums', AlbumsController::class);
-
-    Route::resource('albums.photos', PhotosController::class)
-        ->shallow()
-        ->only(['create', 'store']);
+    Route::get('/albums/{album}/photos/create', [AlbumsController::class, 'createPhoto'])->name('albums.photos.create');
+    Route::post('/albums/{album}/photos', [AlbumsController::class, 'addPhoto'])->name('albums.photos.store');
 });
 
 

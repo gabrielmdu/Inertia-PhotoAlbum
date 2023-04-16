@@ -34,15 +34,6 @@ class PhotosController extends Controller
         return new PhotoResource($photo);
     }
 
-    public function store(StorePhotoRequest $request)
-    {
-        $data = $request->validated();
-
-        Photo::create($data);
-
-        return response()->noContent(Response::HTTP_CREATED);
-    }
-
     public function update(UpdatePhotoRequest $request, Photo $photo)
     {
         $data = $request->validated();

@@ -166,4 +166,73 @@ class AlbumsRouteTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_can_view_album_photos()
+    {
+        $album = Album::factory()
+            ->hasPhotos(20)
+            ->create(['user_id' => $this->user->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->get(route('api.albums.photos.index', ['album' => $album->id]));
+
+        $response->assertOk();
+        $response->assertJsonStructure(['data', 'meta', 'links']);
+        $response->assertJsonCount(4, 'data');
+
+        $data = $response->json('data');
+        $this->assertDatabaseHas('photos', $data[0]);
+    }
+
+    public function test_can_store_photo_in_owned_album()
+    {
+        $album = Album::factory()->create(['user_id' => $this->user->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'caption' => 'This is the caption of the new photo',
+            'api_id' => 200,
+        ];
+
+        $response = $this->postJson(route('api.albums.photos.store', ['album' => $album->id]), $photoData);
+
+        $response->assertCreated();
+    }
+
+    public function test_cant_store_photo_in_not_owned_album()
+    {
+        $otherUser = User::factory()->create();
+        $album = Album::factory()->create(['user_id' => $otherUser->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'caption' => 'This is the caption of the new photo',
+            'api_id' => 200,
+        ];
+
+        $response = $this->postJson(route('api.albums.photos.store', ['album' => $album->id]), $photoData);
+
+        $response->assertForbidden();
+    }
+
+    public function test_cant_store_photo_with_wrong_data()
+    {
+        $album = Album::factory()->create(['user_id' => $this->user->id]);
+
+        Sanctum::actingAs($this->user);
+
+        $photoData = [
+            'caption' => str_repeat('0123456789', 50) . '1',
+            'api_id' => 1001,
+        ];
+
+        $response = $this->postJson(route('api.albums.photos.store', ['album' => $album->id]), $photoData);
+
+        $response->assertUnprocessable();
+
+        $response->assertJsonValidationErrors(['caption', 'api_id']);
+    }
 }
