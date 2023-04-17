@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import ContentLayout from '@/Layouts/ContentLayout'
-import { IconCamera, IconEdit, IconLoader2 } from "@tabler/icons-react";
+import { IconCamera, IconEdit, IconLoader2, IconPhoto } from "@tabler/icons-react";
 import { Link } from "@inertiajs/react";
 import { getPicsumPhoto } from "@/common";
 import ReactTimeAgo from "react-time-ago";
@@ -79,8 +79,13 @@ const ShowAlbum = ({ album }) => {
                 </div>
             </div>
 
-            <div className="flex justify-center sm:justify-end w-full mt-2">
-                <LinkButton className='flex items-end gap-1' href={route('albums.photos.create', { album: album.data.id })}><IconCamera stroke={1} /> Add Photo</LinkButton>
+            <div className="flex items-center justify-between w-full mt-2">
+                <div className="flex items-center gap-1 text-gray-200">
+                    <IconPhoto stroke={1} size={20} /> {album.data.photos_count}
+                </div>
+                <LinkButton className='flex items-end gap-1' href={route('albums.photos.create', { album: album.data.id })}>
+                    <IconCamera stroke={1} /> Add Photo
+                </LinkButton>
             </div>
 
             <div className="grid grid-cols-4 gap-2 mt-6 lazy">
