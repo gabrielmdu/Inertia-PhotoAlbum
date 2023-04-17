@@ -2,13 +2,17 @@ import { getPicsumPhoto } from "@/common";
 import React, { useRef, useState } from "react";
 import Modal from "./Modal";
 import ReactTimeAgo from "react-time-ago";
-import { IconCheck, IconEdit, IconX } from "@tabler/icons-react";
+import { IconCheck, IconDotsVertical, IconEdit, IconX } from "@tabler/icons-react";
 import TextArea from "../TextArea";
 import axios from "axios";
+import Dropdown from "../Dropdown";
+import ConfirmModal from "./ConfirmModal";
+import { router } from "@inertiajs/react";
 
 const PhotoModal = ({ photo, ...props }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [savedPhoto, setSavedPhoto] = useState(photo);
     const [photoData, setPhotoData] = useState(photo);
 
@@ -37,11 +41,39 @@ const PhotoModal = ({ photo, ...props }) => {
         setIsEditing(false);
     };
 
+    const handleOnConfirmDelete = async () => {
+        await axios.delete(route('api.photos.destroy', { photo: photo.id }));
+
+        router.visit(window.location.href, {
+            preserveScroll: true,
+            only: ['photos']
+        });
+    };
+
     return (
         <Modal maxWidth="xl" {...props}>
             <div className="flex flex-col items-center">
                 <div className={"relative w-full h-0 pb-[114.3%] bg-gradient-to-b from-gray-200 to-gray-400 " + (isLoading ? 'animate-pulse' : '')}>
                     <img className="absolute block w-full h-full" onLoad={() => setIsLoading(false)} src={getPicsumPhoto(savedPhoto.api_id, 600, 700)} alt="Photo" />
+
+                    <div className="absolute right-1 top-1">
+                        <Dropdown>
+                            <Dropdown.Trigger>
+                                <span className="inline-flex rounded-md">
+                                    <button
+                                        type="button"
+                                        className="inline-flex items-center py-1 border border-gray-500 hover:border-transparent rounded-md text-gray-700 bg-white/25 hover:bg-white/60 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
+                                    >
+                                        <IconDotsVertical stroke={2} />
+                                    </button>
+                                </span>
+                            </Dropdown.Trigger>
+
+                            <Dropdown.Content>
+                                <Dropdown.Button onClick={() => setIsDeleteModalOpen(true)}>Delete photo</Dropdown.Button>
+                            </Dropdown.Content>
+                        </Dropdown>
+                    </div>
                 </div>
                 <div className="w-full p-2 bg-stone-900">
 
@@ -84,6 +116,17 @@ const PhotoModal = ({ photo, ...props }) => {
                     }
                 </div>
             </div>
+
+            {isDeleteModalOpen
+                && <ConfirmModal
+                    show={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onCancel={() => setIsDeleteModalOpen(false)}
+                    onConfirm={handleOnConfirmDelete}
+                >
+                    Confirm delete photo?
+                </ConfirmModal>
+            }
         </Modal>
     );
 };
