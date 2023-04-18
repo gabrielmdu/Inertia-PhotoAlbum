@@ -8,10 +8,12 @@ trait HasUserTrait
 {
     protected User $user;
 
-    public function setUp(): void
+    protected function setUpUser(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
+
+        $this->actingAs($this->user);
     }
 }

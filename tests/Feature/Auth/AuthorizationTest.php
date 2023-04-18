@@ -31,7 +31,7 @@ class AuthorizationTest extends TestCase
     {
         $users = User::factory(2)
             ->hasAlbums(1)
-            ->create();
+            ->createQuietly();
 
         $unaccessibleAlbum = $users[1]->albums[0];
 

@@ -17,11 +17,20 @@ class AlbumsRouteTest extends TestCase
     use RefreshDatabase;
     use HasUserTrait;
 
-    public function test_can_view_own_album()
+    protected function setUp(): void
     {
-        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
+        parent::setUp();
 
-        $this->user->albums()->save($album);
+        $this->setUpUser();
+
+        Album::unsetEventDispatcher();
+    }
+
+    public function test_user_can_view_own_album()
+    {
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -35,10 +44,12 @@ class AlbumsRouteTest extends TestCase
         $response->assertJsonFragment($modelData);
     }
 
-    public function test_cant_view_not_owned_album()
+    public function test_user_cant_view_not_owned_album()
     {
-        $user = User::factory()->create();
-        $album = Album::factory()->createQuietly(['user_id' => $user->id]);
+        $otherUser = User::factory()->create();
+        $album = Album::factory()
+            ->for($otherUser)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -47,11 +58,11 @@ class AlbumsRouteTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_can_list_albums()
+    public function test_user_can_list_albums()
     {
-        $this->user->albums()->saveMany(
-            Album::factory(35)->createQuietly(['user_id' => $this->user->id])
-        );
+        Album::factory(35)
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -61,11 +72,11 @@ class AlbumsRouteTest extends TestCase
         $response->assertJsonCount(20, 'data');
     }
 
-    public function test_can_paginate_albums()
+    public function test_user_can_paginate_albums()
     {
-        $this->user->albums()->saveMany(
-            Album::factory(35)->createQuietly(['user_id' => $this->user->id])
-        );
+        Album::factory(35)
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -75,17 +86,15 @@ class AlbumsRouteTest extends TestCase
         $response->assertJsonCount(15, 'data');
     }
 
-    public function test_can_filter_albums_by_text()
+    public function test_user_can_filter_albums_by_text()
     {
-        $this->user->albums()->saveMany(
-            Album::factory()
-                ->count(20)
-                ->sequence(
-                    ['name' => 'ABC', 'description' => 'GHI'],
-                    ['name' => 'DEF', 'description' => 'JKL'],
-                )
-                ->createQuietly(['user_id' => $this->user->id])
-        );
+        Album::factory(20)
+            ->for($this->user)
+            ->sequence(
+                ['name' => 'ABC', 'description' => 'GHI'],
+                ['name' => 'DEF', 'description' => 'JKL'],
+            )
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -96,7 +105,7 @@ class AlbumsRouteTest extends TestCase
         $response->assertJsonCount(0, 'data');
     }
 
-    public function test_can_create_album()
+    public function test_user_can_create_album()
     {
         Sanctum::actingAs($this->user);
 
@@ -117,11 +126,11 @@ class AlbumsRouteTest extends TestCase
         $this->assertDatabaseHas('albums', $albumData);
     }
 
-    public function test_can_update_album()
+    public function test_user_can_update_album()
     {
-        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
-
-        $this->user->albums()->save($album);
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -142,9 +151,11 @@ class AlbumsRouteTest extends TestCase
         $this->assertDatabaseHas('albums', $albumData);
     }
 
-    public function test_can_delete_album()
+    public function test_user_can_delete_album()
     {
-        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -155,10 +166,12 @@ class AlbumsRouteTest extends TestCase
         $this->assertSoftDeleted($album);
     }
 
-    public function test_cant_delete_not_owned_album()
+    public function test_user_cant_delete_not_owned_album()
     {
-        $newUser = User::factory()->create();
-        $album = Album::factory()->createQuietly(['user_id' => $newUser->id]);
+        $otherUser = User::factory()->create();
+        $album = Album::factory()
+            ->for($otherUser)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -167,11 +180,12 @@ class AlbumsRouteTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_can_view_album_photos()
+    public function test_user_can_view_album_photos()
     {
         $album = Album::factory()
+            ->for($this->user)
             ->hasPhotos(20)
-            ->create(['user_id' => $this->user->id]);
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -185,9 +199,11 @@ class AlbumsRouteTest extends TestCase
         $this->assertDatabaseHas('photos', $data[0]);
     }
 
-    public function test_can_store_photo_in_owned_album()
+    public function test_user_can_store_photo_in_owned_album()
     {
-        $album = Album::factory()->create(['user_id' => $this->user->id]);
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -201,10 +217,12 @@ class AlbumsRouteTest extends TestCase
         $response->assertCreated();
     }
 
-    public function test_cant_store_photo_in_not_owned_album()
+    public function test_user_cant_store_photo_in_not_owned_album()
     {
         $otherUser = User::factory()->create();
-        $album = Album::factory()->create(['user_id' => $otherUser->id]);
+        $album = Album::factory()
+            ->for($otherUser)
+            ->create();
 
         Sanctum::actingAs($this->user);
 
@@ -218,9 +236,11 @@ class AlbumsRouteTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_cant_store_photo_with_wrong_data()
+    public function test_user_cant_store_photo_with_wrong_data()
     {
-        $album = Album::factory()->create(['user_id' => $this->user->id]);
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
 
         Sanctum::actingAs($this->user);
 

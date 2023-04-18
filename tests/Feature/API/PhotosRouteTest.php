@@ -15,7 +15,16 @@ class PhotosRouteTest extends TestCase
     use RefreshDatabase;
     use HasUserTrait;
 
-    public function test_can_list_photos()
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setUpUser();
+
+        Album::unsetEventDispatcher();
+    }
+
+    public function test_user_can_list_photos()
     {
         // two albums with two photos each
         Album::factory(2)
@@ -32,11 +41,12 @@ class PhotosRouteTest extends TestCase
         $response->assertJsonCount(4, 'data');
     }
 
-    public function test_can_view_photo()
+    public function test_user_can_view_photo()
     {
         $album = Album::factory()
+            ->for($this->user)
             ->hasPhotos(1)
-            ->create(['user_id' => $this->user->id]);
+            ->create();
 
         $photo = $album->photos[0];
 
@@ -53,7 +63,7 @@ class PhotosRouteTest extends TestCase
         ]);
     }
 
-    public function test_cant_view_not_owned_photo()
+    public function test_user_cant_view_not_owned_photo()
     {
         $otherUser = User::factory()
             ->has(Album::factory()
@@ -69,11 +79,12 @@ class PhotosRouteTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_can_update_owned_photo()
+    public function test_user_can_update_owned_photo()
     {
         $album = Album::factory()
+            ->for($this->user)
             ->hasPhotos(1)
-            ->create(['user_id' => $this->user->id]);
+            ->create();
 
         $photo = $album->photos[0];
 
@@ -92,11 +103,12 @@ class PhotosRouteTest extends TestCase
         $this->assertEquals($photoData, $photo->only(['api_id', 'caption']));
     }
 
-    public function test_cant_update_photo_with_invalid_data()
+    public function test_user_cant_update_photo_with_invalid_data()
     {
         $album = Album::factory()
+            ->for($this->user)
             ->hasPhotos(1)
-            ->create(['user_id' => $this->user->id]);
+            ->create();
 
         $photo = $album->photos[0];
 
@@ -114,7 +126,7 @@ class PhotosRouteTest extends TestCase
         $response->assertJsonValidationErrors(['api_id', 'caption']);
     }
 
-    public function test_cant_update_not_owned_photo()
+    public function test_user_cant_update_not_owned_photo()
     {
         $otherUser = User::factory()
             ->has(Album::factory()
@@ -133,7 +145,7 @@ class PhotosRouteTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_can_delete_owned_photo()
+    public function test_user_can_delete_owned_photo()
     {
         $album = Album::factory()
             ->for($this->user)
@@ -151,7 +163,7 @@ class PhotosRouteTest extends TestCase
         $this->assertSoftDeleted($photo);
     }
 
-    public function test_cant_delete_not_owned_photo()
+    public function test_user_cant_delete_not_owned_photo()
     {
         $album = Album::factory()
             ->for(User::factory()->create())

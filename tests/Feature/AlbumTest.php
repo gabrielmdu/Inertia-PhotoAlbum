@@ -11,6 +11,13 @@ class AlbumTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Album::unsetEventDispatcher();
+    }
+
     public function test_album_belongs_to_user(): void
     {
         $user = User::factory()->create();

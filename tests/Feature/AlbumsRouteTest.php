@@ -17,15 +17,22 @@ class AlbumsRouteTest extends TestCase
     use RefreshDatabase;
     use HasUserTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setUpUser();
+
+        Album::unsetEventDispatcher();
+    }
+
     public function test_user_can_see_albums(): void
     {
         $this->user->albums()->saveMany(
-            Album::factory(3)->createQuietly(['user_id' => $this->user->id])
+            Album::factory(3)->create(['user_id' => $this->user->id])
         );
 
-        $response = $this
-            ->actingAs($this->user)
-            ->get(route('albums.index'));
+        $response = $this->get(route('albums.index'));
 
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
@@ -36,8 +43,7 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_cant_see_any_albums(): void
     {
-        $response = $this->actingAs($this->user)
-            ->get(route('albums.index'));
+        $response = $this->get(route('albums.index'));
 
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
@@ -48,10 +54,12 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_view_show_album_page()
     {
-        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
+        $album = Album::factory()
+            ->for($this->user)
+            ->hasPhotos(10)
+            ->create();
 
-        $response = $this->actingAs($this->user)
-            ->get(route('albums.show', ['album' => $album->id]));
+        $response = $this->get(route('albums.show', ['album' => $album->id]));
 
         $response->assertOk();
 
@@ -67,6 +75,7 @@ class AlbumsRouteTest extends TestCase
                         'cover_id' => $album->cover_id,
                         'created_at' => $album->created_at->getTimestampMs(),
                         'updated_at' => $album->updated_at->getTimestampMs(),
+                        'photos_count' => 10,
                     ])
             ));
     }
@@ -74,7 +83,9 @@ class AlbumsRouteTest extends TestCase
     public function test_user_cant_view_not_owned_show_album_page()
     {
         $otherUser = User::factory()->create();
-        $album = Album::factory()->createQuietly(['user_id' => $otherUser->id]);
+        $album = Album::factory()
+            ->for($otherUser)
+            ->create();
 
         $response = $this->actingAs($this->user)
             ->get(route('albums.show', compact('album')));
@@ -84,8 +95,7 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_view_create_album_page()
     {
-        $response = $this->actingAs($this->user)
-            ->get(route('albums.create'));
+        $response = $this->get(route('albums.create'));
 
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
@@ -113,26 +123,24 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_cannot_store_album_with_wrong_params()
     {
-        $response = $this->actingAs($this->user)
-            ->postJson(route('albums.store', [
-                'name' => 'AB',
-                'description' => 'this is my description',
-                'cover_id' => -1,
-            ]));
+        $response = $this->postJson(route('albums.store', [
+            'name' => 'AB',
+            'description' => 'this is my description',
+            'cover_id' => -1,
+        ]));
 
         $response->assertJsonStructure(['errors' => ['name', 'cover_id']]);
     }
 
     public function test_user_can_view_own_album_edit_page()
     {
-        $album = $this->user->albums()->createQuietly([
+        $album = $this->user->albums()->create([
             'name' => 'My Album 1',
             'description' => fake()->text(),
             'cover_id' => 123,
         ]);
 
-        $response = $this->actingAs($this->user)
-            ->get(route('albums.edit', ['album' => $album->id]));
+        $response = $this->get(route('albums.edit', ['album' => $album->id]));
 
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
@@ -154,7 +162,7 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_update_album(): void
     {
-        $album = $this->user->albums()->createQuietly([
+        $album = $this->user->albums()->create([
             'name' => 'My Album 1',
             'description' => 'My description 1',
             'cover_id' => 1,
@@ -166,13 +174,12 @@ class AlbumsRouteTest extends TestCase
 
         Event::fake([AlbumUpdated::class]);
 
-        $response = $this->actingAs($this->user)
-            ->put(route('albums.update', [
-                'album' => $album->id,
-                'name' => $newName,
-                'description' => $newDescription,
-                'cover_id' => $newCoverId,
-            ]));
+        $response = $this->put(route('albums.update', [
+            'album' => $album->id,
+            'name' => $newName,
+            'description' => $newDescription,
+            'cover_id' => $newCoverId,
+        ]));
 
         Event::assertDispatched(AlbumUpdated::class);
 
@@ -187,10 +194,11 @@ class AlbumsRouteTest extends TestCase
 
     public function test_user_can_delete_own_album()
     {
-        $album = Album::factory()->createQuietly(['user_id' => $this->user->id]);
+        $album = Album::factory()
+            ->for($this->user)
+            ->create();
 
-        $this->actingAs($this->user)
-            ->delete(route('albums.destroy', ['album' => $album->id]));
+        $this->delete(route('albums.destroy', ['album' => $album->id]));
 
         $this->assertSoftDeleted($album);
     }
@@ -201,8 +209,7 @@ class AlbumsRouteTest extends TestCase
             ->for($this->user)
             ->create();
 
-        $response = $this->actingAs($this->user)
-            ->get(route('albums.photos.create', ['album' => $album->id]));
+        $response = $this->get(route('albums.photos.create', ['album' => $album->id]));
 
         $response->assertInertia(
             fn (AssertableInertia $page) => $page
@@ -221,8 +228,7 @@ class AlbumsRouteTest extends TestCase
             'api_id' => 200,
         ];
 
-        $response = $this->actingAs($this->user)
-            ->postJson(route('albums.photos.store', ['album' => $album->id]), $photoData);
+        $response = $this->postJson(route('albums.photos.store', ['album' => $album->id]), $photoData);
 
         $response->assertRedirect(route('albums.show', ['album' => $album->id]));
 
@@ -240,8 +246,7 @@ class AlbumsRouteTest extends TestCase
             'api_id' => 123,
         ];
 
-        $response = $this->actingAs($this->user)
-            ->postJson(route('albums.photos.store', ['album' => $album->id]), $photoData);
+        $response = $this->postJson(route('albums.photos.store', ['album' => $album->id]), $photoData);
 
         $response->assertRedirect(route('dashboard'));
 
