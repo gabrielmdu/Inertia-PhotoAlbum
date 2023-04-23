@@ -46,7 +46,7 @@ const PhotoModal = ({ photo, ...props }) => {
 
         router.visit(window.location.href, {
             preserveScroll: true,
-            only: ['photos']
+            only: ['album', 'photos']
         });
     };
 
