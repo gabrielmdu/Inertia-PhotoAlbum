@@ -61,13 +61,13 @@ const ShowAlbum = ({ album }) => {
                     </Link>
                 </div>
 
-                <div className="flex justify-center w-full sm:w-72 h-60 sm:h-72">
+                <div className="flex justify-center w-full sm:basis-72 h-60 sm:h-72">
                     <div className="rounded-full overflow-hidden border-4 border-zinc-200 w-60 sm:w-full h-full">
                         <img src={getPicsumPhoto(album.data.cover_id, 300)} alt="Album cover" />
                     </div>
                 </div>
 
-                <div className="flex flex-1 flex-col justify-center gap-4 px-4 py-3">
+                <div className="flex flex-1 flex-col justify-center overflow-hidden break-words gap-4 px-4 py-3">
                     <div className="text-3xl sm:text-5xl font-mono text-lime-400">{album.data.name}</div>
                     <div className="text-md sm:text-xl italic text-gray-100">{album.data.description}</div>
                 </div>
