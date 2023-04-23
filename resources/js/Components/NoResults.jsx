@@ -1,7 +1,7 @@
 import React from "react";
 
-const NoResults = ({ children }) =>
-    <div className="rounded bg-purple-100 p-3 text-lg">
+const NoResults = ({ children, className = '' }) =>
+    <div className={`rounded bg-purple-100 p-3 text-lg ${className}`}>
         {children || 'There are no results.'}
     </div>;
 
