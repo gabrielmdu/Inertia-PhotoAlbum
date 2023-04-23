@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import ContentLayout from '@/Layouts/ContentLayout'
-import { IconCamera, IconEdit, IconLoader2, IconPhoto } from "@tabler/icons-react";
+import { IconCamera, IconEdit, IconLoader2, IconPhoto, IconPhotoOff } from "@tabler/icons-react";
 import { Link } from "@inertiajs/react";
 import { getPicsumPhoto } from "@/common";
 import ReactTimeAgo from "react-time-ago";
@@ -10,6 +10,7 @@ import Photo from "@/Components/Photo";
 import PhotoModal from "@/Components/Modal/PhotoModal";
 import axios from "axios";
 import LinkButton from "@/Components/Button/LinkButton";
+import NoResults from "@/Components/NoResults";
 
 const ShowAlbum = ({ album }) => {
     const refObserved = useRef();
@@ -83,16 +84,22 @@ const ShowAlbum = ({ album }) => {
                 <div className="flex items-center gap-1 text-gray-200">
                     <IconPhoto stroke={1} size={20} /> {album.data.photos_count}
                 </div>
-                <LinkButton className='flex items-end gap-1' href={route('albums.photos.create', { album: album.data.id })}>
+                <LinkButton
+                    className={'flex items-end gap-1 ' + (photos.length === 0 ? 'animate-pulse' : '')}
+                    href={route('albums.photos.create', { album: album.data.id })}
+                >
                     <IconCamera stroke={1} /> Add Photo
                 </LinkButton>
             </div>
 
-            <div className="grid grid-cols-4 gap-2 mt-6 lazy">
-                {photos.map(photo =>
-                    <Photo key={photo.id} photo={photo} onClick={() => { setIsModalOpen(true); setCurrPhoto(photo); }} />)
-                }
-            </div>
+            {photos.length === 0
+                ? <NoResults className="mt-4">There are no photos here (yet!) <IconPhotoOff className='inline' /></NoResults>
+                : <div className="grid grid-cols-4 gap-2 mt-6 lazy">
+                    {photos.map(photo =>
+                        <Photo key={photo.id} photo={photo} onClick={() => { setIsModalOpen(true); setCurrPhoto(photo); }} />)
+                    }
+                </div>
+            }
 
             <div ref={refObserved} className="">
                 {isLoading &&
