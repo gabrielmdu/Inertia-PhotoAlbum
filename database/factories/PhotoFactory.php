@@ -18,7 +18,7 @@ class PhotoFactory extends Factory
     {
         return [
             'caption' => fake()->text(),
-            'api_id' => rand(1, 1000)
+            'api_id' => rand(1, config('ipa.max_api_id'))
         ];
     }
 }

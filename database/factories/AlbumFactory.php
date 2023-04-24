@@ -19,7 +19,7 @@ class AlbumFactory extends Factory
         return [
             'name' => fake()->sentence(3),
             'description' => fake()->text(),
-            'cover_id' => rand(1, 1000),
+            'cover_id' => rand(1, config('ipa.max_api_id')),
         ];
     }
 }

@@ -124,12 +124,12 @@ class AlbumsRouteTest extends TestCase
     public function test_user_cannot_store_album_with_wrong_params()
     {
         $response = $this->postJson(route('albums.store', [
-            'name' => 'AB',
-            'description' => 'this is my description',
+            'name' => '',
+            'description' => str_repeat('1234567890', 31),
             'cover_id' => -1,
         ]));
 
-        $response->assertJsonStructure(['errors' => ['name', 'cover_id']]);
+        $response->assertJsonStructure(['errors' => ['name', 'description', 'cover_id']]);
     }
 
     public function test_user_can_view_own_album_edit_page()

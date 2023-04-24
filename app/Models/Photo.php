@@ -13,6 +13,8 @@ class Photo extends Model
     use HasFactory;
     use SoftDeletes;
 
+    public const LIMIT_CAPTION = 500;
+
     protected $fillable = [
         'album_id',
         'caption',

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Album;
+use App\Models\Photo;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
-            $table->text('caption');
+            $table->text('caption', Photo::LIMIT_CAPTION);
             $table->integer('api_id');
             $table->foreignIdFor(Album::class);
             $table->softDeletes();

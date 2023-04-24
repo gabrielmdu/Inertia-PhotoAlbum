@@ -16,6 +16,8 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
 
+    public const LIMIT_NAME = '100';
+
     /**
      * The attributes that are mass assignable.
      *

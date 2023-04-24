@@ -16,6 +16,9 @@ class Album extends Model
     use HasFactory;
     use SoftDeletes;
 
+    public const LIMIT_NAME = 100;
+    public const LIMIT_DESCRIPTION = 300;
+
     protected $fillable = [
         'name',
         'description',

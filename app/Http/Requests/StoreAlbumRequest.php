@@ -24,9 +24,9 @@ class StoreAlbumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:100',
-            'description' => 'string|max:300',
-            'cover_id' => 'required|int|between:1,1000'
+            'name' => ['required', 'string', 'min:1', 'max:' . Album::LIMIT_NAME],
+            'description' => ['string', 'max:' . Album::LIMIT_DESCRIPTION],
+            'cover_id' => ['required', 'int', 'between:1,' . config('ipa.max_api_id')],
         ];
     }
 }

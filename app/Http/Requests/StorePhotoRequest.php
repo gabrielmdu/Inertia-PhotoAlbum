@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Photo;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePhotoRequest extends FormRequest
@@ -24,8 +25,8 @@ class StorePhotoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'api_id' => ['required', 'integer', 'between:1,1000'],
-            'caption' => ['string', 'max:500'],
+            'api_id' => ['required', 'integer', 'between:1,' . config('ipa.max_api_id')],
+            'caption' => ['string', 'max:' . Photo::LIMIT_CAPTION],
         ];
     }
 }
