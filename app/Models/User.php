@@ -3,7 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -58,6 +61,24 @@ class User extends Authenticatable
         return $this->hasManyThrough(Photo::class, Album::class);
     }
 
+    public function latestUpdatedAlbums(int $limit = 10): HasMany
+    {
+        return $this
+            ->albums()
+            ->orderByDesc('updated_at')
+            ->limit($limit)
+            ->withCount('photos');
+    }
+
+    public function latestPhotos(int $limit = 10): HasManyThrough
+    {
+        return $this
+            ->photos()
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit($limit);
+    }
+
     public function getLatestAlbumsPaginated(int $perPage = 9, array $filters = [])
     {
         return $this
@@ -71,10 +92,8 @@ class User extends Authenticatable
     public function getLatestPhotosPaginated(int $perPage = 4, int $albumId = null)
     {
         return $this
-            ->photos()
+            ->latestPhotos(0)
             ->byAlbum($albumId)
-            ->orderBy('created_at', 'DESC')
-            ->orderBy('id', 'DESC')
             ->simplePaginate($perPage);
     }
 }
