@@ -15,7 +15,7 @@ const Button = ({ ComponentType = 'button', colorType = BUTTON_TYPE.NEUTRAL, dis
             type='button'
             {...props}
             className={
-                `rounded px-5 py-2 ${color} text-gray-100 drop-shadow-md text-sm ${disabled && 'opacity-25'} `
+                `whitespace-nowrap rounded px-5 py-2 ${color} text-gray-100 drop-shadow-md text-sm ${disabled && 'opacity-25'} `
                 + className
             }
             disabled={disabled}

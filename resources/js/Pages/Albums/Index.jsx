@@ -22,7 +22,7 @@ export default function AlbumsIndex({ albums }) {
         <ContentLayout title='Albums'>
             <ContentHeader>My Albums</ContentHeader>
 
-            <div className='flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 my-6'>
+            <div className='flex flex-col sm:flex-row items-center justify-between gap-3 my-6'>
                 <SearchText className="max-w-full sm:max-w-sm" text={filters.search || ''} searchCallback={searchCallback} callbackTriggerTime={250} />
                 <LinkButton className='flex items-center gap-1' href={route('albums.create')}><IconAlbum size={22} /> Create Album</LinkButton>
             </div>
