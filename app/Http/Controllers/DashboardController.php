@@ -11,12 +11,12 @@ class DashboardController extends Controller
     {
         $albums = $request
             ->user()
-            ->latestUpdatedAlbums(3)
+            ->latestUpdatedAlbums(5)
             ->get();
 
         $photos = $request
             ->user()
-            ->latestPhotos(3)
+            ->latestPhotos(5)
             ->get();
 
         return Inertia::render('Dashboard', compact('albums', 'photos'));

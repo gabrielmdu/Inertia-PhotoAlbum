@@ -1,4 +1,4 @@
-import Album from '@/Components/Album';
+import Album from '@/Components/Album/Album';
 import ContentLayout from '@/Layouts/ContentLayout';
 import Pagination from '@/Components/Pagination';
 import { getCleanObject, getLinksFromLaravelPagination } from '@/common';
