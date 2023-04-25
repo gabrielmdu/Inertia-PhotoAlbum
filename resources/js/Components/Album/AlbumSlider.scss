@@ -1,3 +1,19 @@
 .glider-slide {
     background: transparent;
+    border: none;
+}
+
+.glider-prev {
+    left: -30px;
+}
+
+.glider-next {
+    right: -30px;
+}
+
+.glider-prev,
+.glider-next {
+    display: flex;
+    justify-content: center;
+    top: 41%;
 }
