@@ -1,6 +1,7 @@
 import ContentHeader from '@/Components/ContentHeader';
 import ContentLayout from '@/Layouts/ContentLayout';
 import AlbumSlider from '@/Components/Album/AlbumSlider';
+import PhotoSlider from '@/Components/PhotoSlider';
 import { Link, usePage } from '@inertiajs/react';
 
 export default function Dashboard({ albums, photos }) {
@@ -23,6 +24,15 @@ export default function Dashboard({ albums, photos }) {
                     </Link>
                 </div>
             </div>
+
+            <div className='mt-8 bg-slate-200 rounded drop-shadow-lg'>
+                <div className='p-2 text-gray-200 bg-violet-800 rounded-t'>Your latest photo activity</div>
+
+                <div className='px-8'>
+                    <PhotoSlider photos={photos} />
+                </div>
+            </div>
+
         </ContentLayout>
     );
 }
