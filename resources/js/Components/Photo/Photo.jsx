@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import { getPicsumPhoto } from '@/common';
 import { IconCameraOff } from '@tabler/icons-react';
-import React, { useRef, useState } from 'react';
 
 const Photo = ({ photo, onClick = () => { }, className = '' }) => {
     const [isLoading, setIsLoading] = useState(true);

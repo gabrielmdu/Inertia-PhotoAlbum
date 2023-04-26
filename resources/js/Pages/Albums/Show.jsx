@@ -6,7 +6,7 @@ import { getPicsumPhoto } from "@/common";
 import ReactTimeAgo from "react-time-ago";
 import { usePaginatedResults } from "@/Hooks/usePaginatedResults";
 import { useObserved } from "@/Hooks/useObserved";
-import Photo from "@/Components/Photo";
+import Photo from "@/Components/Photo/Photo";
 import PhotoModal from "@/Components/Modal/PhotoModal";
 import axios from "axios";
 import LinkButton from "@/Components/Button/LinkButton";

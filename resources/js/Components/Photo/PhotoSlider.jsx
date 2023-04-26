@@ -5,7 +5,7 @@ import { IconCircleArrowLeft, IconCircleArrowRight } from '@tabler/icons-react';
 
 import "glider-js/glider.min.css";
 import "react-glider/glider.defaults.css";
-import './Album/AlbumSlider.scss';
+import '../Album/AlbumSlider.scss';
 
 const PhotoSlider = ({ photos }) => {
     const options = [

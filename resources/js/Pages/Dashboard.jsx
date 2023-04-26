@@ -1,7 +1,7 @@
 import ContentHeader from '@/Components/ContentHeader';
 import ContentLayout from '@/Layouts/ContentLayout';
 import AlbumSlider from '@/Components/Album/AlbumSlider';
-import PhotoSlider from '@/Components/PhotoSlider';
+import PhotoSlider from '@/Components/Photo/PhotoSlider';
 import { Link, usePage } from '@inertiajs/react';
 
 export default function Dashboard({ albums, photos }) {
