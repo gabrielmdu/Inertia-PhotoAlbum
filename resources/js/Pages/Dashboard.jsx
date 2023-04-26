@@ -1,8 +1,10 @@
 import ContentHeader from '@/Components/ContentHeader';
 import ContentLayout from '@/Layouts/ContentLayout';
+import Panel from '@/Components/Panel';
 import AlbumSlider from '@/Components/Album/AlbumSlider';
 import PhotoSlider from '@/Components/Photo/PhotoSlider';
-import { Link, usePage } from '@inertiajs/react';
+import LinkButton from '@/Components/Button/LinkButton';
+import { usePage } from '@inertiajs/react';
 
 export default function Dashboard({ albums, photos }) {
     const { auth: { user } } = usePage().props;
@@ -11,27 +13,19 @@ export default function Dashboard({ albums, photos }) {
         <ContentLayout title="Dashboard">
             <ContentHeader>Dashboard - {user.name}</ContentHeader>
 
-            <div className='mt-8 bg-slate-200 rounded drop-shadow-lg'>
-                <div className='p-2 text-gray-200 bg-violet-800 rounded-t'>Your latest album activity</div>
-
+            <Panel title={<>Yout latest <span className='font-bold'>album</span> activity</>}>
                 <div className='px-8'>
                     <AlbumSlider albums={albums} />
                 </div>
 
-                <div className='pb-4 pl-4'>
-                    <Link href={route('albums.index')} className='py-2 px-3 rounded bg-cyan-400 text-white'>
-                        View all
-                    </Link>
-                </div>
-            </div>
+                <LinkButton href={route('albums.index')} className='mb-3 ml-3 mt-2'>View all</LinkButton>
+            </Panel>
 
-            <div className='mt-8 bg-slate-200 rounded drop-shadow-lg'>
-                <div className='p-2 text-gray-200 bg-violet-800 rounded-t'>Your latest photo activity</div>
-
+            <Panel title={<>Yout latest <span className='font-bold'>photo</span> activity</>} titleClassName='bg-lime-600 text-gray-50'>
                 <div className='px-8'>
                     <PhotoSlider photos={photos} />
                 </div>
-            </div>
+            </Panel>
 
         </ContentLayout>
     );
