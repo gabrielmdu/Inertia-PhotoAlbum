@@ -1,39 +1,10 @@
+import Slider from '../Slider/Slider';
 import Album from './Album';
-import Glider from 'react-glider';
 import ReactTimeAgo from 'react-time-ago';
-import { IconCircleArrowLeft, IconCircleArrowRight } from '@tabler/icons-react';
-
-import "glider-js/glider.min.css";
-import "react-glider/glider.defaults.css";
-import './AlbumSlider.scss';
 
 const AlbumSlider = ({ albums }) => {
-    const options = [
-        {
-            breakpoint: 640,
-            settings: {
-                slidesToShow: 2,
-            },
-        },
-        {
-            breakpoint: 920,
-            settings: {
-                slidesToShow: 3,
-            },
-        },
-    ];
-
     return (
-        <Glider
-            draggable
-            hasArrows
-            scrollLock
-            iconLeft={<IconCircleArrowLeft size={28} />}
-            iconRight={<IconCircleArrowRight size={28} />}
-            responsive={options}
-            slidesToShow={1}
-            slidesToScroll={1}
-        >
+        <Slider>
             {
                 albums.map(album =>
                     <div key={album.id} className='flex flex-col'>
@@ -43,7 +14,7 @@ const AlbumSlider = ({ albums }) => {
                         </div>
                     </div>)
             }
-        </Glider>
+        </Slider>
     );
 };
 
