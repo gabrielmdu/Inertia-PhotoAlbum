@@ -27,7 +27,7 @@ export default function Dashboard({ albums, photos }) {
             </Panel>
 
             <Panel>
-                <Panel.Title className='flex align-center gap-1 bg-lime-600 text-gray-50'>
+                <Panel.Title className='flex align-center gap-1 !bg-lime-600 text-gray-50'>
                     <IconPhoto stroke={1.5} /> Your latest <span className='font-bold'>photo</span> activity
                 </Panel.Title>
 
