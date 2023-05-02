@@ -4,7 +4,7 @@ import Panel from '@/Components/Panel';
 import AlbumSlider from '@/Components/Album/AlbumSlider';
 import PhotoSlider from '@/Components/Photo/PhotoSlider';
 import LinkButton from '@/Components/Button/LinkButton';
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { IconAlbum, IconPhoto } from '@tabler/icons-react';
 
 export default function Dashboard({ albums, photos }) {
@@ -20,10 +20,21 @@ export default function Dashboard({ albums, photos }) {
                 </Panel.Title>
 
                 <div className='px-8'>
-                    <AlbumSlider albums={albums} />
+                    {
+                        albums.length > 0
+                            ? <>
+                                <AlbumSlider albums={albums} />
+                                <LinkButton href={route('albums.index')} className='mb-3 ml-3 mt-2'>View all</LinkButton>
+                            </>
+                            : <div className='py-4'>
+                                <p>
+                                    You don't have any albums.
+                                </p>
+                                <Link className='underline text-lime-600' href={route('albums.create')}>Start by adding a new one here</Link>.
+                            </div>
+                    }
                 </div>
 
-                <LinkButton href={route('albums.index')} className='mb-3 ml-3 mt-2'>View all</LinkButton>
             </Panel>
 
             <Panel>
@@ -32,7 +43,22 @@ export default function Dashboard({ albums, photos }) {
                 </Panel.Title>
 
                 <div className='px-8'>
-                    <PhotoSlider photos={photos} />
+                    {
+                        photos.length > 0
+                            ? <PhotoSlider photos={photos} />
+                            : <div className='py-4'>
+                                <p>
+                                    You don't have any photos.
+                                </p>
+                                <p>
+                                    You can <Link className='underline text-lime-600' href={route('albums.index')}>
+                                        access your albums to add photos
+                                    </Link> or <Link className='underline text-lime-600' href={route('albums.create')}>
+                                        create a new one
+                                    </Link>.
+                                </p>
+                            </div>
+                    }
                 </div>
             </Panel>
 
