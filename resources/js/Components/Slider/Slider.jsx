@@ -1,5 +1,5 @@
 import Glider from 'react-glider';
-import { useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { IconCircleArrowLeft, IconCircleArrowRight } from '@tabler/icons-react';
 
 import "glider-js/glider.min.css";
@@ -7,11 +7,11 @@ import "react-glider/glider.defaults.css";
 import './Slider.scss';
 
 const Slider = ({ children }) => {
-    const gliderRef = useRef(null);
-
     // adjust the number of slides according to how many were added
-    useEffect(() => {
-        const slidesCount = gliderRef.current.slides.length;
+    const defineSlidesShown = useCallback(event => {
+        const glider = event.detail.target._glider;
+
+        const slidesCount = glider.slides.length;
 
         const options = [
             {
@@ -28,8 +28,8 @@ const Slider = ({ children }) => {
             },
         ];
 
-        gliderRef.current.setOption({ responsive: options });
-    }, [gliderRef]);
+        glider.setOption({ responsive: options });
+    }, []);
 
     return (
         <Glider
@@ -40,7 +40,7 @@ const Slider = ({ children }) => {
             iconRight={<IconCircleArrowRight size={28} />}
             slidesToShow={1}
             slidesToScroll={1}
-            ref={gliderRef}
+            onLoad={defineSlidesShown}
         >
             {children}
         </Glider>
